@@ -3,6 +3,7 @@ import cv2
 
 # load the video
 camera = cv2.VideoCapture(0)
+last_aspectRatio = 0
 
 # keep looping
 while True:
@@ -14,6 +15,7 @@ while True:
   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
   blurred = cv2.GaussianBlur(gray, (7, 7), 0)
   edged = cv2.Canny(blurred, 50, 150)
+  cv2.imshow("edged",edged)
 
   # find contours in the edge map
   cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -41,13 +43,14 @@ while True:
       # aspect ratio of the contour falls within appropriate bounds
       keepDims = w > 25 and h > 25
       keepSolidity = solidity > 0.9
-      keepAspectRatio = aspectRatio >= 1.2 and aspectRatio <= 1.6
+      keepAspectRatio = aspectRatio >= 1 and aspectRatio <= 1.8
 
       # ensure that the contour passes all our tests
       if keepDims and keepSolidity and keepAspectRatio:
         print(x,y,w,h)
         # draw an outline around the target and update the status text
         cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
+        last_aspectRatio = aspectRatio
         status = "Target(s) Acquired"
         # compute the center of the contour region and draw the crosshairs
         M = cv2.moments(approx)
@@ -55,7 +58,7 @@ while True:
         cv2.circle(frame, (cX, cY), 5, (0, 0, 255), thickness=-1, lineType=8, shift=0)
 
   # draw the status text on the frame
-  cv2.putText(frame, status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+  cv2.putText(frame, status + " - Aspect Ratio: " + str('%0.3f' % last_aspectRatio), (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
   # show the frame and record if a key is pressed
   cv2.imshow("Corner Detection", frame)
