@@ -16,13 +16,15 @@ for i = 1:npics
     i/npics*100
     
     %filename = [cd,'/images/Circle/Image-' num2str(i,'%05d') '.jpeg'];
-    filename = [cd,'/images/Image-30cm-side.jpeg'];
+    filename = [cd,'/images/Image-30cm.jpeg'];
 
     img = imread(filename);
     imOrig = imresize(img,[1200,1200]);
 %        ims{i} = imOrig;
 
     [im, newOrigin] = undistortImage(imOrig, cameraParams, 'OutputView', 'full');
+    im = imOrig;
+    imshow(im)
 
     [imagePoints, boardSize] = detectCheckerboardPoints(im);
 

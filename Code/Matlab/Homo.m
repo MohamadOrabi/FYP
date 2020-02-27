@@ -23,14 +23,15 @@ for i = 1:npics
 %        ims{i} = imOrig;
 
     [im, newOrigin] = undistortImage(imOrig, cameraParams, 'OutputView', 'full');
-    %im = imOrig;
+    im = imOrig;
+    imshow(im)
 
     [imagePoints, boardSize] = detectCheckerboardPoints(im);
 
     squareSize = 25; % in millimeters
     worldPoints = generateCheckerboardPoints(boardSize, squareSize);
 
-    imagePoints = imagePoints %+ newOrigin; % adds newOrigin to every row of imagePoints
+    imagePoints = imagePoints + newOrigin; % adds newOrigin to every row of imagePoints
 
     % Compute rotation and translation of the camera.
     [R, t] = extrinsics(imagePoints, worldPoints, cameraParams);
