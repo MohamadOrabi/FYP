@@ -24,7 +24,6 @@ for i = 1:npics
 
     [im, newOrigin] = undistortImage(imOrig, cameraParams, 'OutputView', 'full');
     im = imOrig;
-    imshow(im)
 
     [imagePoints, boardSize] = detectCheckerboardPoints(im);
 

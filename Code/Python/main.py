@@ -40,7 +40,7 @@ def getCorners(frame,last_aspectRatio):
 			# aspect ratio of the contour falls within appropriate bounds
 			keepDims = w > 25 and h > 25
 			keepSolidity = solidity > 0.9
-			keepAspectRatio = aspectRatio >= 1 and aspectRatio <= 1.8
+			keepAspectRatio = aspectRatio >= 1.3 and aspectRatio <= 1.5
 
 			detected = keepDims and keepSolidity and keepAspectRatio
 
@@ -49,7 +49,7 @@ def getCorners(frame,last_aspectRatio):
 				#print(x,y,w,h)
 				#current_corners = np.array([x,y,w,h])
 				approx = np.squeeze(approx, axis = 1)
-				print("approx: ", np.shape(approx), " corners: ", np.shape(corners))
+				#print("approx: ", np.shape(approx), " corners: ", np.shape(corners))
 				corners = np.vstack([corners, approx])
 
 				# draw an outline around the target and update the status text
@@ -72,21 +72,76 @@ def getCorners(frame,last_aspectRatio):
 camera = cv2.VideoCapture(0)
 last_aspectRatio = 0
 
-def findDoubleBox(Array):
-	n_rects = len(Array)/2
+def findDoubleBox(arr):
+	n_rects = len(arr)/2
 
 	if(n_rects == 1):
-		return Array
+		return arr
 
+def estimateCameraPose(corners, objp, mtx, dist):
+
+	ret, rvec, tvec = cv2.solvePnP(objp, corners, mtx, dist)
+
+	tvec = np.squeeze(tvec)
+
+	if ret:
+		Rt,jacob = cv2.Rodrigues(rvec)
+		R = Rt.transpose()
+		#print("R",Rt)
+		pos = tvec.dot(-Rt)
+		print("Distance: ",np.linalg.norm(pos))
+		print("pos",pos)
+
+	return pos
+
+def createRectWorldPoints(w,h):
+	worldPnts = np.zeros((4,3))
+	worldPnts[1] = np.array([w,0,0])
+	worldPnts[2] = np.array([0,h,0])
+	worldPnts[3] = np.array([w,h,0])
+
+	return worldPnts
+
+def sortCorners(corners):
+	out_corners = np.array((4,3))
+	
+	out_corners = corners[corners[:,1].argsort()]
+	out_corners[(0,1),:] = corners[corners[(0,1),0].argsort()]
+	out_corners[(2,3),:] = corners[2+corners[(2,3),0].argsort()]
+	#out_corners[0:1,:] = corners[corners[0:1,0].argsort()]
+	#print(corners[corners[(0,1),0].argsort()])
+	#out_corners[2:3,:] = corners[corners[2:3,0].argsort()]
+	return out_corners
+
+
+
+
+
+
+
+
+
+# ~~~~~~~~~~~~~~Start of MAAAAIIIINNN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mtx = np.load("mtx.npy")
+dist = np.load("dist.npy")
+
+worldPoints = createRectWorldPoints(270,190)
+sorted = sortCorners(worldPoints)
+print(sorted)
 
 while True:
 	# grab the current frame and initialize the status text
+
 	_, frame = camera.read()
 
 	frame_to_show, detected, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
 
 	if detected:
+		corners = sortCorners(corners)
 		print("Corners:\n",corners)
+		pos = estimateCameraPose(corners,worldPoints,mtx,dist)
+		print("Distance: ", np.linalg.norm(pos))
 
 	cv2.imshow('Frame To Show',frame_to_show)
 
