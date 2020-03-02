@@ -108,6 +108,8 @@ def sortCorners(corners):
 	out_corners = corners[corners[:,1].argsort()]
 	out_corners[(0,1),:] = corners[corners[(0,1),0].argsort()]
 	out_corners[(2,3),:] = corners[2+corners[(2,3),0].argsort()]
+	out_corners[(3,4),:] = corners[3+corners[(3,4),0].argsort()]
+	out_corners[(5,6),:] = corners[5+corners[(5,6),0].argsort()]
 	#out_corners[0:1,:] = corners[corners[0:1,0].argsort()]
 	#print(corners[corners[(0,1),0].argsort()])
 	#out_corners[2:3,:] = corners[corners[2:3,0].argsort()]
