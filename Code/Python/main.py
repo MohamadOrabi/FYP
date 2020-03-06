@@ -3,8 +3,16 @@ import imutils
 import cv2
 import numpy as np
 
+def cornerIn(curr, image_points):
+	for x, y in image_points:
+		if abs(x - curr[0]) < 25 and abs(y - curr[1]) < 25:
+			return True
+	return False
+
 def getCorners(frame,last_aspectRatio):
-	corners = np.empty([0, 2], dtype=int)
+	corners = np.empty([0, 2], dtype=np.float32)
+	current_corners = np.empty([0, 2], dtype=np.float32)
+
 	detected = False
 	status = "No Targets"
 
@@ -15,7 +23,7 @@ def getCorners(frame,last_aspectRatio):
 	#cv2.imshow("edged",edged)
 
 	# find contours in the edge map
-	cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	cnts = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	cnts = imutils.grab_contours(cnts)
 
 	# loop over the contours
@@ -40,14 +48,13 @@ def getCorners(frame,last_aspectRatio):
 			# aspect ratio of the contour falls within appropriate bounds
 			keepDims = w > 25 and h > 25
 			keepSolidity = solidity > 0.9
-			keepAspectRatio = aspectRatio >= 1.3 and aspectRatio <= 1.5
+			keepAspectRatio = aspectRatio >= 1.4 and aspectRatio <= 1.8
 
 			detected = keepDims and keepSolidity and keepAspectRatio
 
 			# ensure that the contour passes all our tests
-			if keepDims and keepSolidity and keepAspectRatio:
-				#print(x,y,w,h)
-				#current_corners = np.array([x,y,w,h])
+			if detected and not cornerIn([x, y], current_corners):
+				current_corners = np.append(current_corners, np.array([[x, y]]), axis=0)
 				approx = np.squeeze(approx, axis = 1)
 				#print("approx: ", np.shape(approx), " corners: ", np.shape(corners))
 				corners = np.vstack([corners, approx])
@@ -78,7 +85,7 @@ def findDoubleBox(arr):
 	if(n_rects == 1):
 		return arr
 
-def estimateCameraPose(corners, objp, mtx, dist):
+def estimateCameraPose(objp, corners, mtx, dist):
 
 	ret, rvec, tvec = cv2.solvePnP(objp, corners, mtx, dist)
 
@@ -94,14 +101,24 @@ def estimateCameraPose(corners, objp, mtx, dist):
 
 	return pos
 
-def createRectWorldPoints(w,h):
-	worldPnts = np.zeros((4,3))
-	worldPnts[1] = np.array([w,0,0])
-	worldPnts[2] = np.array([0,h,0])
-	worldPnts[3] = np.array([w,h,0])
+#worldPoints = createRectWorldPoints(25, 270, 190, 220, 140)
+def createRectWorldPoints(off, w1, h1, w2, h2):
+	worldPnts = np.zeros((8,3), dtype=np.float32)
+
+	worldPnts[0] = np.array([0,0,0])
+	worldPnts[1] = np.array([0,h1,0])
+	worldPnts[2] = np.array([w1,0,0])
+	worldPnts[3] = np.array([w1,h1,0])
+
+	worldPnts[4] = np.array([off,off,0])
+	worldPnts[5] = np.array([off,off+h2,0])
+	worldPnts[6] = np.array([off+w2,off,0])
+	worldPnts[7] = np.array([off+w2,off+h2,0])
 
 	return worldPnts
 
+#This function should be deleted
+'''
 def sortCorners(corners):
 	out_corners = np.array((4,3))
 	
@@ -114,7 +131,7 @@ def sortCorners(corners):
 	#print(corners[corners[(0,1),0].argsort()])
 	#out_corners[2:3,:] = corners[corners[2:3,0].argsort()]
 	return out_corners
-
+'''
 def trackRect(frame,x,y,w,h):	#We can probably change this function to pass roi directly
 	track_window = (x, y, w, h)
 	roi = frame[y:y + h, x:x + w]
@@ -133,38 +150,55 @@ def trackRect(frame,x,y,w,h):	#We can probably change this function to pass roi 
 	x, y, w, h = track_window
 	return x,y,w,h
 
+'''
+
+def sortCorners(corners):
+	corners = corners[corners[:,0].argsort()]
+
+	corners[0:2] = corners[corners[0:2,1].argsort()]
+	corners[2:4] = corners[2+corners[2:4,1].argsort()]
+	corners[4:6] = corners[4+corners[4:6,1].argsort()]
+	corners[6:8] = corners[6+corners[6:8,1].argsort()]
+	 
+	corners = np.insert(corners, 2, np.array([corners[-2], corners[-1]]), axis=0)
+	corners = np.delete(corners, [8, 9], axis=0) 
+	
+	return corners
 # ~~~~~~~~~~~~~~Start of MAAAAIIIINNN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 mtx = np.load("mtx.npy")
 dist = np.load("dist.npy")
+last_aspectRatio = 0
 
-worldPoints = createRectWorldPoints(270,190)
-#sorted = sortCorners(worldPoints)
-#print(sorted)
-x = 550;y=250;w=50;h=200
+#camera = cv2.VideoCapture(0)
 
-while True:
+#while True:
 	# grab the current frame and initialize the status text
-	_, frame = camera.read()
 
-	frame_to_show, detected, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
-	x,y,w,h = trackRect(frame,x,y,w,h)
+	#_, frame = camera.read()
+frame = cv2.imread("Image-900mm.jpeg")
+frame_to_show, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
 
-	if detected:
-		corners = sortCorners(corners)
-		print("Corners:\n",corners)
-		pos = estimateCameraPose(corners,worldPoints,mtx,dist)
-		print("Distance: ", np.linalg.norm(pos))
+#if detected:
+corners = sortCorners(corners)
+print("Corners:\n",corners)
 
-	frame_to_show = cv2.rectangle(frame, (x, y), (x + w, y + h), 255, 2)
-	cv2.imshow('Frame To Show',frame_to_show)
+#Count the corner inside the image
+counter = 0
+for x, y in corners:
+	counter+=1
+	cv2.circle(frame, (int(x), int(y)), 5, (0, 255, 255), thickness=-1, lineType=8, shift=0)
+	cv2.putText(frame, str(counter), (int(x + 12), int(y + 12)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
 
-	key = cv2.waitKey(1) & 0xFF
-	# if the 'q' key is pressed, stop the loop
-	if key == ord("q"):
-		break
+worldPoints = createRectWorldPoints(22, 250, 170, 207, 123)
+print("World Points:\n", worldPoints)
 
+pos = estimateCameraPose(worldPoints, corners, mtx, dist)
+print("Distance: ", np.linalg.norm(pos))
+cv2.imshow('Frame To Show',frame_to_show)
+
+key = cv2.waitKey(0)
 
 # cleanup the camera and close any open windows
-camera.release()
+#camera.release()
 cv2.destroyAllWindows()
