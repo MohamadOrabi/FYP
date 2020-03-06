@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-MIN_MATCH_COUNT = 4
+MIN_MATCH_COUNT = 10
 
 training_img = cv2.imread("Images/Im1.jpeg")
 training_img = cv2.cvtColor(training_img, cv2.COLOR_BGR2GRAY)
@@ -10,24 +10,48 @@ training_img = cv2.cvtColor(training_img, cv2.COLOR_BGR2GRAY)
 testing_img = cv2.imread("Images/Im4.jpeg")
 testing_img = cv2.cvtColor(testing_img, cv2.COLOR_BGR2GRAY)
 
+# gray = np.float32(testing_img)
+# dst = cv2.cornerHarris(gray,2,3,0.04)
+# dst[dst>0.0001*dst.max()]=[255]
+# cv2.imshow('Harris', dst)
+# cv2.waitKey()
+
+
 #cv2.imshow('Training Image', training_img)
 
+# Adding Canny Filter
+#blurred = cv2.GaussianBlur(training_img, (7, 7), 0)
+#training_img = cv2.Canny(blurred, 50, 150)
+
+#cv2.imshow('Modified Training Image', training_img)
+#cv2.waitKey()
+
 # Initiate SIFT detector
-sift = cv2.xfeatures2d.SIFT_create()
+#sift = cv2.xfeatures2d.SIFT_create(contrastThreshold = 5, edgeThreshold = 10000)
+#fast = cv2.FastFeatureDetector_create()
+orb = cv2.ORB_create()
 
 # find the keypoints and descriptors with SIFT
-kp1, des1 = sift.detectAndCompute(training_img, None)
-kp2, des2 = sift.detectAndCompute(testing_img,None)
+#kp1, des1 = sift.detectAndCompute(training_img, None)
+#kp2, des2 = sift.detectAndCompute(testing_img,None)
+# kp1 = fast.detect(training_img, None)
+# kp2 = fast.detect(testing_img, None)
+kp1, des1 = orb.detectAndCompute(training_img, None)
+kp2, des2 = orb.detectAndCompute(testing_img,None)
 
 # Draw keypoints on image training image and display
 training_img = cv2.drawKeypoints(training_img, kp1, training_img, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-#cv2.imshow('Detected Keypoints', training_img)
+cv2.imshow('Detected Keypoints', training_img)
+cv2.waitKey()
 
-FLANN_INDEX_KDTREE = 1
-index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-search_params = dict(checks = 50)
-flann = cv2.FlannBasedMatcher(index_params, search_params)
-matches = flann.knnMatch(des1,des2,k=2)
+#FLANN_INDEX_KDTREE = 1
+#index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+#search_params = dict(checks = 50)
+#flann = cv2.FlannBasedMatcher(index_params, search_params)
+#matches = flann.knnMatch(des1,des2,k=2)
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(des1,des2, k=2)
+
 
 # store all the good matches as per Lowe's ratio test.
 good = []

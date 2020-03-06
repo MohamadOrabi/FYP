@@ -115,13 +115,23 @@ def sortCorners(corners):
 	#out_corners[2:3,:] = corners[corners[2:3,0].argsort()]
 	return out_corners
 
+def trackRect(frame,x,y,w,h):	#We can probably change this function to pass roi directly
+	track_window = (x, y, w, h)
+	roi = frame[y:y + h, x:x + w]
+	hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+	mask = cv2.inRange(hsv_roi, np.array((0., 60., 32.)), np.array((180., 255., 255.)))
+	roi_hist = cv2.calcHist([hsv_roi], [0], mask, [180], [0, 180])
+	cv2.normalize(roi_hist, roi_hist, 0, 255, cv2.NORM_MINMAX)
 
+	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	#This could probably be calculated somewhere else
+	dst = cv2.calcBackProject([hsv], [0], roi_hist, [0, 180], 1)
 
+	# apply CamShift to get the new location
+	ret, track_window = cv2.CamShift(dst, track_window, (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10,1))
 
-
-
-
-
+	# Draw it on image
+	x, y, w, h = track_window
+	return x,y,w,h
 
 # ~~~~~~~~~~~~~~Start of MAAAAIIIINNN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -129,15 +139,16 @@ mtx = np.load("mtx.npy")
 dist = np.load("dist.npy")
 
 worldPoints = createRectWorldPoints(270,190)
-sorted = sortCorners(worldPoints)
-print(sorted)
+#sorted = sortCorners(worldPoints)
+#print(sorted)
+x = 550;y=250;w=50;h=200
 
 while True:
 	# grab the current frame and initialize the status text
-
 	_, frame = camera.read()
 
 	frame_to_show, detected, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
+	x,y,w,h = trackRect(frame,x,y,w,h)
 
 	if detected:
 		corners = sortCorners(corners)
@@ -145,6 +156,7 @@ while True:
 		pos = estimateCameraPose(corners,worldPoints,mtx,dist)
 		print("Distance: ", np.linalg.norm(pos))
 
+	frame_to_show = cv2.rectangle(frame, (x, y), (x + w, y + h), 255, 2)
 	cv2.imshow('Frame To Show',frame_to_show)
 
 	key = cv2.waitKey(1) & 0xFF
