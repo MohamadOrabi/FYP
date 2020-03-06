@@ -2,6 +2,7 @@
 import imutils
 import cv2
 import numpy as np
+import warnings
 
 def cornerIn(curr, image_points):
 	for x, y in image_points:
@@ -13,7 +14,7 @@ def getCorners(frame,last_aspectRatio):
 	corners = np.empty([0, 2], dtype=np.float32)
 	current_corners = np.empty([0, 2], dtype=np.float32)
 
-	detected = False
+	detected_corners = False
 	status = "No Targets"
 
 	# convert the frame to grayscale, blur it, and detect edges
@@ -54,6 +55,7 @@ def getCorners(frame,last_aspectRatio):
 
 			# ensure that the contour passes all our tests
 			if detected and not cornerIn([x, y], current_corners):
+				detected_corners = True
 				current_corners = np.append(current_corners, np.array([[x, y]]), axis=0)
 				approx = np.squeeze(approx, axis = 1)
 				#print("approx: ", np.shape(approx), " corners: ", np.shape(corners))
@@ -70,38 +72,32 @@ def getCorners(frame,last_aspectRatio):
 
 	# draw the status text on the frame
 	cv2.putText(frame, status + " - Aspect Ratio: " + str('%0.3f' % last_aspectRatio), (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-	# show the frame and record if a key is pressed
-	#cv2.imshow("Corner Detection", frame)
-	return frame, detected, corners, last_aspectRatio
-
-
-camera = cv2.VideoCapture(0)
-last_aspectRatio = 0
-
-def findDoubleBox(arr):
-	n_rects = len(arr)/2
-
-	if(n_rects == 1):
-		return arr
+	return frame, detected_corners, corners, last_aspectRatio
 
 def estimateCameraPose(objp, corners, mtx, dist):
 
-	ret, rvec, tvec = cv2.solvePnP(objp, corners, mtx, dist)
+	pos = 0
 
-	tvec = np.squeeze(tvec)
+	try:
+		ret, rvec, tvec = cv2.solvePnP(objp, corners, mtx, dist)
+		tvec = np.squeeze(tvec)
 
-	if ret:
-		Rt,jacob = cv2.Rodrigues(rvec)
-		R = Rt.transpose()
-		#print("R",Rt)
-		pos = tvec.dot(-Rt)
-		print("Distance: ",np.linalg.norm(pos))
-		print("pos",pos)
+		if ret:
+			Rt,jacob = cv2.Rodrigues(rvec)
+			R = Rt.transpose()
+			#print("R",Rt)
+			pos = tvec.dot(-Rt)
+			print("Distance: ",np.linalg.norm(pos))
+			print("pos",pos)
+	except:
+		warnings.warn("Error is estimateCameraPose")
+		print("\n objp:", objp,
+			  "\n corners:", corners,
+			  "\n mtx:", mtx,
+			  "\n dst:", dist,)
 
 	return pos
 
-#worldPoints = createRectWorldPoints(25, 270, 190, 220, 140)
 def createRectWorldPoints(off, w1, h1, w2, h2):
 	worldPnts = np.zeros((8,3), dtype=np.float32)
 
@@ -117,26 +113,11 @@ def createRectWorldPoints(off, w1, h1, w2, h2):
 
 	return worldPnts
 
-#This function should be deleted
-'''
-def sortCorners(corners):
-	out_corners = np.array((4,3))
-	
-	out_corners = corners[corners[:,1].argsort()]
-	out_corners[(0,1),:] = corners[corners[(0,1),0].argsort()]
-	out_corners[(2,3),:] = corners[2+corners[(2,3),0].argsort()]
-	out_corners[(3,4),:] = corners[3+corners[(3,4),0].argsort()]
-	out_corners[(5,6),:] = corners[5+corners[(5,6),0].argsort()]
-	#out_corners[0:1,:] = corners[corners[0:1,0].argsort()]
-	#print(corners[corners[(0,1),0].argsort()])
-	#out_corners[2:3,:] = corners[corners[2:3,0].argsort()]
-	return out_corners
-'''
 def trackRect(frame,x,y,w,h):	#We can probably change this function to pass roi directly
 	track_window = (x, y, w, h)
 	roi = frame[y:y + h, x:x + w]
 	hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
-	mask = cv2.inRange(hsv_roi, np.array((0., 60., 32.)), np.array((180., 255., 255.)))
+	mask = cv2.inRange(hsv_roi, np.array((0., 0., 0.)), np.array((255., 255., 255.)))
 	roi_hist = cv2.calcHist([hsv_roi], [0], mask, [180], [0, 180])
 	cv2.normalize(roi_hist, roi_hist, 0, 255, cv2.NORM_MINMAX)
 
@@ -148,9 +129,9 @@ def trackRect(frame,x,y,w,h):	#We can probably change this function to pass roi 
 
 	# Draw it on image
 	x, y, w, h = track_window
+	img2 = cv2.rectangle(frame, (x, y), (x + w, y + h), 255, 2)
+	cv2.imshow('img2', img2)
 	return x,y,w,h
-
-'''
 
 def sortCorners(corners):
 	corners = corners[corners[:,0].argsort()]
@@ -170,35 +151,57 @@ mtx = np.load("mtx.npy")
 dist = np.load("dist.npy")
 last_aspectRatio = 0
 
-#camera = cv2.VideoCapture(0)
-
-#while True:
-	# grab the current frame and initialize the status text
-
-	#_, frame = camera.read()
-frame = cv2.imread("Image-900mm.jpeg")
-frame_to_show, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
-
-#if detected:
-corners = sortCorners(corners)
-print("Corners:\n",corners)
-
-#Count the corner inside the image
-counter = 0
-for x, y in corners:
-	counter+=1
-	cv2.circle(frame, (int(x), int(y)), 5, (0, 255, 255), thickness=-1, lineType=8, shift=0)
-	cv2.putText(frame, str(counter), (int(x + 12), int(y + 12)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
-
 worldPoints = createRectWorldPoints(22, 250, 170, 207, 123)
+sortCorners(worldPoints)
 print("World Points:\n", worldPoints)
 
-pos = estimateCameraPose(worldPoints, corners, mtx, dist)
-print("Distance: ", np.linalg.norm(pos))
-cv2.imshow('Frame To Show',frame_to_show)
+first_detection = True
+x_track, y_track, w_track, h_track = 0,0,0,0
 
-key = cv2.waitKey(0)
+camera = cv2.VideoCapture("Images/Vid.mov")
+
+while True:
+	# grab the current frame and initialize the status text
+	_, frame = camera.read()
+	frame = cv2.flip(frame, 0)
+
+	if first_detection:
+		frame_to_show, detected_corners, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
+		if detected_corners:
+			first_detection = False
+
+			#Get Location of window to be tracked
+			x_track = int(np.min(corners[:,0]))
+			y_track = int(np.min(corners[:,1]))
+			w_track = int(np.max(corners[:,0]) - np.min(corners[:,0]))
+			h_track = int(np.max(corners[:,1]) - np.min(corners[:,1]))
+
+	else:
+		#frame_to_track = frame[y_track:y_track+h_track, x_track:x_track+w_track]
+		#cv2.imshow('frame',frame)
+		frame_to_show, detected_corners, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
+		#x_track,y_track,w_track,h_track = trackRect(frame,x_track,y_track,w_track,h_track)
+
+	if detected_corners:
+		print("Detected!")
+		corners = sortCorners(corners)
+		print("Corners:\n", corners)
+
+		#Count the corner inside the image
+		counter = 0
+		for x, y in corners:
+			counter+=1
+			cv2.circle(frame_to_show, (int(x), int(y)), 5, (0, 255, 255), thickness=-1, lineType=8, shift=0)
+			cv2.putText(frame_to_show, str(counter), (int(x + 12), int(y + 12)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
+
+		pos = estimateCameraPose(worldPoints, corners, mtx, dist)
+		print("Distance: ", np.linalg.norm(pos))
+	else:
+		print("Not Detected")
+
+	cv2.imshow('Frame To Show',frame_to_show)
+	cv2.waitKey()
 
 # cleanup the camera and close any open windows
-#camera.release()
+camera.release()
 cv2.destroyAllWindows()
