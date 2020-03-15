@@ -78,7 +78,7 @@ class DigitDetect:
 
 def cornerIn(curr, image_points):
 	for x, y in image_points:
-		if abs(x - curr[0]) < 25 and abs(y - curr[1]) < 25:
+		if abs(x - curr[0]) < 5 and abs(y - curr[1]) < 5:
 			return True
 	return False
 
@@ -91,8 +91,11 @@ def getCorners(frame,last_aspectRatio):
 
 	# convert the frame to grayscale, blur it, and detect edges
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-	blurred = cv2.GaussianBlur(gray, (7, 7), 0)
-	edged = cv2.Canny(blurred, 50, 150)
+	blurred = cv2.GaussianBlur(gray, (7, 7), 3)
+	edged = cv2.Canny(blurred, 1, 100)
+
+	kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+	#edged = cv2.dilate(edged, kernel) # Also try cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
 	#cv2.imshow("edged",edged)
 
 	# find contours in the edge map
@@ -103,9 +106,11 @@ def getCorners(frame,last_aspectRatio):
 	for c in cnts:
 		# approximate the contour
 		peri = cv2.arcLength(c, True)
-		approx = cv2.approxPolyDP(c, 0.01 * peri, True)
+		approx = cv2.approxPolyDP(c, 0.1 * peri, True)
+		approx = cv2.convexHull(approx)
+		cv2.drawContours(frame, [approx], 0, (0, 255, 0), 1)
 
-	# ensure that the approximated contour is "roughly" rectangular
+		# ensure that the approximated contour is "roughly" rectangular
 		if len(approx) == 4:
 			# compute the bounding box of the approximated contour and
 			# use the bounding box to compute the aspect ratio
@@ -122,6 +127,8 @@ def getCorners(frame,last_aspectRatio):
 			keepDims = w > 25 and h > 25
 			keepSolidity = solidity > 0.9
 			keepAspectRatio = aspectRatio >= 1.4 and aspectRatio <= 1.8
+			#keepDims, keepAspectRatio, keepAspectRatio = True,True,True
+			#keepAspectRatio = True
 
 			detected = keepDims and keepSolidity and keepAspectRatio
 
@@ -170,7 +177,7 @@ def estimateCameraPose(objp, corners, mtx, dist):
 
 	return pos
 
-def createRectWorldPoints(off, w1, h1, w2, h2):
+def createRectWorldPoints(w1, h1, w2, h2, dw, dh):
 	worldPnts = np.zeros((8,3), dtype=np.float32)
 
 	worldPnts[0] = np.array([0,0,0])
@@ -178,10 +185,10 @@ def createRectWorldPoints(off, w1, h1, w2, h2):
 	worldPnts[2] = np.array([w1,0,0])
 	worldPnts[3] = np.array([w1,h1,0])
 
-	worldPnts[4] = np.array([off,off,0])
-	worldPnts[5] = np.array([off,off+h2,0])
-	worldPnts[6] = np.array([off+w2,off,0])
-	worldPnts[7] = np.array([off+w2,off+h2,0])
+	worldPnts[4] = np.array([dw,dh,0])
+	worldPnts[5] = np.array([dw,dh+h2,0])
+	worldPnts[6] = np.array([dw+w2,dh,0])
+	worldPnts[7] = np.array([dw+w2,dh+h2,0])
 
 	return worldPnts
 
@@ -206,17 +213,20 @@ def trackRect(frame,x,y,w,h):	#We can probably change this function to pass roi 
 	return x,y,w,h
 
 def sortCorners(corners):
-	corners = corners[corners[:,0].argsort()]
+	if corners.shape[0] == 8:
+		corners = corners[corners[:,0].argsort()]
 
-	corners[0:2] = corners[corners[0:2,1].argsort()]
-	corners[2:4] = corners[2+corners[2:4,1].argsort()]
-	corners[4:6] = corners[4+corners[4:6,1].argsort()]
-	corners[6:8] = corners[6+corners[6:8,1].argsort()]
+		corners[0:2] = corners[corners[0:2,1].argsort()]
+		corners[2:4] = corners[2+corners[2:4,1].argsort()]
+		corners[4:6] = corners[4+corners[4:6,1].argsort()]
+		corners[6:8] = corners[6+corners[6:8,1].argsort()]
 
-	corners = np.insert(corners, 2, np.array([corners[-2], corners[-1]]), axis=0)
-	corners = np.delete(corners, [8, 9], axis=0)
+		corners = np.insert(corners, 2, np.array([corners[-2], corners[-1]]), axis=0)
+		corners = np.delete(corners, [8, 9], axis=0)
 
-	return corners
+		return corners
+	else:
+		return corners
 # ~~~~~~~~~~~~~~Start of MAAAAIIIINNN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Initialize DigitDetect Object
@@ -235,19 +245,27 @@ mtx = np.load("mtx.npy")
 dist = np.load("dist.npy")
 last_aspectRatio = 0
 
-worldPoints = createRectWorldPoints(22, 250, 170, 207, 123)
+worldPoints = createRectWorldPoints(297, 210, 263, 158, 17, 26)
 sortCorners(worldPoints)
-print("World Points:\n", worldPoints)
+#print("World Points:\n", worldPoints)
 
 first_detection = True
 x_track, y_track, w_track, h_track = 0,0,0,0
 
-camera = cv2.VideoCapture("Images/Vid.mov")
+#camera = cv2.VideoCapture("Images/Vid.mov")
+camera = cv2.VideoCapture(0)
+
 
 while True:
 	# grab the current frame and initialize the status text
 	_, frame = camera.read()
-	frame = cv2.flip(frame, -1)
+	# frame = cv2.imread('Images/IMG_100.jpeg')
+	# h, w = frame.shape[:2]
+	# newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
+	# #frame = cv2.resize(frame, (1200, 1200))
+	# frame = cv2.undistort(frame, newcameramtx, dist, None, mtx)
+
+	#frame = cv2.flip(frame, -1)
 
 	if first_detection:
 		frame_to_show, detected_corners, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
@@ -275,7 +293,7 @@ while True:
 	if detected_corners:
 		print("Detected!")
 		corners = sortCorners(corners)
-		print("Corners:\n", corners)
+		#print("Corners:\n", corners)
 
 		#Count the corner inside the image
 		counter = 0
@@ -284,8 +302,11 @@ while True:
 			cv2.circle(frame_to_show, (int(x), int(y)), 5, (0, 255, 255), thickness=-1, lineType=8, shift=0)
 			cv2.putText(frame_to_show, str(counter), (int(x + 12), int(y + 12)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
 
-		pos = estimateCameraPose(worldPoints, corners, mtx, dist)
-		print("Distance: ", np.linalg.norm(pos))
+		if counter == 8:
+			pos = estimateCameraPose(worldPoints, corners, mtx, dist)
+			print("Distance: ", np.linalg.norm(pos))
+		else:
+			print("Only ", counter, " corners detected")
 	else:
 		print("Not Detected")
 
