@@ -58,7 +58,7 @@ class DigitDetect:
 
 	# Retrieve saved model
 	def retrieve_model(self):
-		self.model = load_model('final_model.h5')
+		self.model = load_model('data/final_model.h5')
 
 	# Takes as input the image cropped with only the digit in it
 	def recognise_digit(self, img):
@@ -95,7 +95,7 @@ def getCorners(frame,last_aspectRatio):
 	edged = cv2.Canny(blurred, 1, 100)
 
 	kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-	#edged = cv2.dilate(edged, kernel) # Also try cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+	edged = cv2.dilate(edged, kernel) # Also try cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
 	#cv2.imshow("edged",edged)
 
 	# find contours in the edge map
@@ -108,7 +108,7 @@ def getCorners(frame,last_aspectRatio):
 		peri = cv2.arcLength(c, True)
 		approx = cv2.approxPolyDP(c, 0.1 * peri, True)
 		approx = cv2.convexHull(approx)
-		cv2.drawContours(frame, [approx], 0, (0, 255, 0), 1)
+		#cv2.drawContours(frame, [approx], 0, (0, 255, 0), 1)
 
 		# ensure that the approximated contour is "roughly" rectangular
 		if len(approx) == 4:
@@ -231,69 +231,53 @@ def sortCorners(corners):
 
 # Initialize DigitDetect Object
 digitDetect = DigitDetect()
-# Commented training the model since it is already trained and saved
-# digitDetect.create_model()q
-# digitDetect.train_model()
-# loss, acc = digitDetect.test_model()
-# print("Loss: %.3f, Accuracy: %.3f" %(loss,acc))
-# digitDetect.save_model()
 digitDetect.retrieve_model()
-
 digit = None
 
-mtx = np.load("mtx.npy")
-dist = np.load("dist.npy")
+mtx = np.load("data/mtx.npy")
+dist = np.load("data/dist.npy")
 last_aspectRatio = 0
 
 worldPoints = createRectWorldPoints(297, 210, 263, 158, 17, 26)
 sortCorners(worldPoints)
-#print("World Points:\n", worldPoints)
 
-first_detection = True
 x_track, y_track, w_track, h_track = 0,0,0,0
 
-#camera = cv2.VideoCapture("Images/Vid.mov")
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture("Images/Vid.mov")
+#camera = cv2.VideoCapture(0)
 
 
 while True:
 	# grab the current frame and initialize the status text
 	_, frame = camera.read()
-	# frame = cv2.imread('Images/IMG_100.jpeg')
+	#frame = cv2.imread('Images/Im1.jpeg')
 	# h, w = frame.shape[:2]
 	# newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 	# #frame = cv2.resize(frame, (1200, 1200))
 	# frame = cv2.undistort(frame, newcameramtx, dist, None, mtx)
 
-	#frame = cv2.flip(frame, -1)
+	frame = cv2.flip(frame, -1)
 
-	if first_detection:
-		frame_to_show, detected_corners, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
-		if detected_corners:
-			first_detection = True
+	frame_to_show, detected_corners, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
 
-			#Get Location of window to be tracked
-			x_track = int(np.min(corners[:,0]))
-			y_track = int(np.min(corners[:,1]))
-			w_track = int(np.max(corners[:,0]) - np.min(corners[:,0]))
-			h_track = int(np.max(corners[:,1]) - np.min(corners[:,1]))
+	if detected_corners and len(corners) == 8:
 
-			#Get digit in rectangle
-			roi = frame[y_track:y_track + h_track, x_track:x_track + w_track]
-			roi = cv2.bitwise_not(roi)
-			digit = digitDetect.recognise_digit(roi)
-			print("Digit: ", digit)
+		print("Corners Detected!")
 
-	else:
-		#frame_to_track = frame[y_track:y_track+h_track, x_track:x_track+w_track]
-		#cv2.imshow('frame',frame)
-		frame_to_show, detected_corners, corners, last_aspectRatio = getCorners(frame, last_aspectRatio)
-		#x_track,y_track,w_track,h_track = trackRect(frame,x_track,y_track,w_track,h_track)
-
-	if detected_corners:
-		print("Detected!")
 		corners = sortCorners(corners)
-		#print("Corners:\n", corners)
+
+		#Get Location of window to be tracked
+		x_track = int(corners[4,0])
+		y_track = int(corners[4,1])
+		w_track = int(corners[6,0] - x_track)
+		h_track = int(corners[7,1] - y_track)
+
+		#Get digit in rectangle
+		roi = frame[y_track:y_track + h_track, x_track:x_track + w_track]
+		roi = cv2.bitwise_not(roi)
+		digit = digitDetect.recognise_digit(roi)
+		cv2.imshow('roi', roi)
+		print("Digit: ", digit)
 
 		#Count the corner inside the image
 		counter = 0

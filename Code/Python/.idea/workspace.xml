@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="572ddc35-e760-46d7-abce-df48b324efa0" name="Default Changelist" comment="">
+    <list default="true" id="572ddc35-e760-46d7-abce-df48b324efa0" name="Default Changelist" comment="Added convexHull and Dialation, fixed a couple of bugs. mtx and dist.npy might be wrong!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../~$Sign.pptx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenCVCalibration.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RectDetector.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RectDetector1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/corner_detection.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/final_model.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/helpers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mtx.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sift_detection.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,6 +22,13 @@
   </component>
   <component name="FavoritesManager">
     <favorites_list name="Python" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -49,6 +66,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="OpenCVCalibration" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/OpenCVCalibration.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -74,6 +112,7 @@
       <list>
         <item itemvalue="Python.main" />
         <item itemvalue="Python.DigitDetect" />
+        <item itemvalue="Python.OpenCVCalibration" />
       </list>
     </recent_temporary>
   </component>
@@ -102,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584068420712</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Added convexHull and Dialation, fixed a couple of bugs. mtx and dist.npy might be wrong!">
+      <created>1584236114458</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1584236114459</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -121,53 +167,60 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed a couple of bugs, working on tracking" />
     <MESSAGE value="Added DigitDetect to main. It is currently working. Worth noting that the video being used to test was not uploaded to git." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added DigitDetect to main. It is currently working. Worth noting that the video being used to test was not uploaded to git." />
+    <MESSAGE value="Added convexHull and Dialation, fixed a couple of bugs. mtx and dist.npy might be wrong!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added convexHull and Dialation, fixed a couple of bugs. mtx and dist.npy might be wrong!" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="263" y="2" key="CommitChangelistDialog2" timestamp="1584068420299">
-      <screen x="0" y="0" width="1280" height="800" />
+    <state x="81" y="23" key="CommitChangelistDialog2" timestamp="1584236114005">
+      <screen x="0" y="23" width="1280" height="711" />
     </state>
     <state x="263" y="2" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1584068420299" />
-    <state width="921" height="466" key="DebuggerActiveHint" timestamp="1583467075602">
-      <screen x="0" y="0" width="1280" height="800" />
+    <state x="81" y="23" key="CommitChangelistDialog2/0.23.1280.711@0.23.1280.711" timestamp="1584236114005" />
+    <state width="921" height="415" key="DebuggerActiveHint" timestamp="1584228919291">
+      <screen x="0" y="23" width="1280" height="711" />
     </state>
     <state width="921" height="466" key="DebuggerActiveHint/0.0.1280.800@0.0.1280.800" timestamp="1583467075602" />
-    <state width="629" height="263" key="GridCell.Tab.0.bottom" timestamp="1584122127201">
+    <state width="921" height="415" key="DebuggerActiveHint/0.23.1280.711@0.23.1280.711" timestamp="1584228919291" />
+    <state width="629" height="211" key="GridCell.Tab.0.bottom" timestamp="1584516758675">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1584122127201" />
-    <state width="629" height="263" key="GridCell.Tab.0.center" timestamp="1584122127200">
+    <state width="629" height="211" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1584516758675" />
+    <state width="629" height="218" key="GridCell.Tab.0.bottom/0.23.1280.711@0.23.1280.711" timestamp="1584356168817" />
+    <state width="629" height="211" key="GridCell.Tab.0.center" timestamp="1584516758674">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1584122127200" />
-    <state width="629" height="263" key="GridCell.Tab.0.left" timestamp="1584122127199">
+    <state width="629" height="211" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1584516758674" />
+    <state width="629" height="218" key="GridCell.Tab.0.center/0.23.1280.711@0.23.1280.711" timestamp="1584356168816" />
+    <state width="629" height="211" key="GridCell.Tab.0.left" timestamp="1584516758674">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1584122127199" />
-    <state width="629" height="263" key="GridCell.Tab.0.right" timestamp="1584122127200">
+    <state width="629" height="211" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1584516758674" />
+    <state width="629" height="218" key="GridCell.Tab.0.left/0.23.1280.711@0.23.1280.711" timestamp="1584356168816" />
+    <state width="629" height="211" key="GridCell.Tab.0.right" timestamp="1584516758675">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1584122127200" />
-    <state width="629" height="263" key="GridCell.Tab.1.bottom" timestamp="1584122127205">
+    <state width="629" height="211" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1584516758675" />
+    <state width="629" height="218" key="GridCell.Tab.0.right/0.23.1280.711@0.23.1280.711" timestamp="1584356168817" />
+    <state width="629" height="262" key="GridCell.Tab.1.bottom" timestamp="1584515912777">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1584122127205" />
-    <state width="1259" height="263" key="GridCell.Tab.1.bottom/0.23.1280.711@0.23.1280.711" timestamp="1583467103588" />
-    <state width="629" height="263" key="GridCell.Tab.1.center" timestamp="1584122127203">
+    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1584515912777" />
+    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.23.1280.711@0.23.1280.711" timestamp="1584515107267" />
+    <state width="629" height="262" key="GridCell.Tab.1.center" timestamp="1584515912775">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1584122127203" />
-    <state width="1259" height="263" key="GridCell.Tab.1.center/0.23.1280.711@0.23.1280.711" timestamp="1583467103587" />
-    <state width="629" height="263" key="GridCell.Tab.1.left" timestamp="1584122127203">
+    <state width="629" height="262" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1584515912775" />
+    <state width="629" height="262" key="GridCell.Tab.1.center/0.23.1280.711@0.23.1280.711" timestamp="1584515107265" />
+    <state width="629" height="262" key="GridCell.Tab.1.left" timestamp="1584515912774">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1584122127203" />
-    <state width="1259" height="263" key="GridCell.Tab.1.left/0.23.1280.711@0.23.1280.711" timestamp="1583467103586" />
-    <state width="629" height="263" key="GridCell.Tab.1.right" timestamp="1584122127204">
+    <state width="629" height="262" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1584515912774" />
+    <state width="629" height="262" key="GridCell.Tab.1.left/0.23.1280.711@0.23.1280.711" timestamp="1584515107264" />
+    <state width="629" height="262" key="GridCell.Tab.1.right" timestamp="1584515912776">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="263" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1584122127204" />
-    <state width="1259" height="263" key="GridCell.Tab.1.right/0.23.1280.711@0.23.1280.711" timestamp="1583467103587" />
+    <state width="629" height="262" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1584515912776" />
+    <state width="629" height="262" key="GridCell.Tab.1.right/0.23.1280.711@0.23.1280.711" timestamp="1584515107265" />
     <state x="128" y="69" key="MergeDialog" timestamp="1583461106783">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -176,14 +229,16 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="351" y="123" key="MultipleFileMergeDialog/0.0.1280.800@0.0.1280.800" timestamp="1583461106821" />
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1584068426523">
-      <screen x="0" y="0" width="1280" height="800" />
+    <state x="240" y="147" key="Vcs.Push.Dialog.v2" timestamp="1584236117549">
+      <screen x="0" y="23" width="1280" height="711" />
     </state>
     <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1584068426523" />
-    <state x="317" y="232" key="com.intellij.ide.util.TipDialog" timestamp="1584136420150">
+    <state x="240" y="147" key="Vcs.Push.Dialog.v2/0.23.1280.711@0.23.1280.711" timestamp="1584236117549" />
+    <state x="317" y="232" key="com.intellij.ide.util.TipDialog" timestamp="1584514274043">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="317" y="232" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1584136420150" />
+    <state x="317" y="232" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1584514274043" />
+    <state x="317" y="229" key="com.intellij.ide.util.TipDialog/0.23.1280.711@0.23.1280.711" timestamp="1584224204840" />
     <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1583460820954">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
