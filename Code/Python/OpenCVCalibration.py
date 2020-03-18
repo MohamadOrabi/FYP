@@ -10,7 +10,7 @@ def draw(img, corners, imgpts):
     img = cv.line(img, corner, tuple(imgpts[2].ravel()), (0,0,255), 5)
     return img
 
-calibrate = False;
+calibrate = True;
 
 # termination criteria
 criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 100, 0.001)
@@ -20,7 +20,7 @@ objp[:,:2] = np.mgrid[0:8,0:5].T.reshape(-1,2)*25
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
-images = glob.glob('Images/Image-0*.jpeg') #Try to use only the first 12 images
+images = glob.glob('Images/Original/Image-0*.jpeg') #Try to use only the first 12 images
 
 
 
