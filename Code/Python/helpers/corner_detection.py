@@ -23,8 +23,9 @@ def getCorners(frame,last_aspectRatio):
   edged = cv2.Canny(blurred, 1, 100)
 
   kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-  edged = cv2.dilate(edged, kernel) # Also try cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
-  #cv2.imshow("edged",edged)
+  edged = cv2.dilate(edged, kernel) # Also try 
+  #edged = cv2.morphologyEx(edged, cv2.MORPH_CLOSE, kernel)
+  cv2.imshow("edged",edged)
 
   # find contours in the edge map
   cnts = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -59,6 +60,7 @@ def getCorners(frame,last_aspectRatio):
       #keepAspectRatio = True
 
       detected = keepDims and keepSolidity and keepAspectRatio
+      #detected = True
 
       # ensure that the contour passes all our tests
       if detected and not cornerIn([x, y], current_corners):

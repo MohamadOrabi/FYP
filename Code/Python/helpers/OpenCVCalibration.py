@@ -20,7 +20,7 @@ objp[:,:2] = np.mgrid[0:8,0:5].T.reshape(-1,2)*25
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
-images = glob.glob('Images/Original/Image-0*.jpeg') #Try to use only the first 12 images
+images = glob.glob('../Images/Image-0*.jpeg') #Try to use only the first 12 images
 
 
 
@@ -55,15 +55,15 @@ if calibrate or not parametersLoaded:
 	cv.destroyAllWindows()
 
 	print("GRAY: ",gray.shape[::-1])
-	ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],mtx,dist,flags = cv.CALIB_USE_INTRINSIC_GUESS)
-	np.save("mtx",mtx)
-	np.save("dist",dist)
+	ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
+	np.save("../data/mtx",mtx)
+	np.save("../data/dist",dist)
 
 
 boardShape = (8,5)
 
 #Read the Image
-img = cv.imread('Images/Image-30cm.jpeg') 
+img = cv.imread('../Images/Image-30cm.jpeg') 
 h, w = img.shape[:2]
 newcameramtx, roi = cv.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 #cv.imshow('Original', img)
