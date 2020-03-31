@@ -8,6 +8,21 @@ def cornerIn(curr, image_points):
       return True
   return False
 
+def maskImage(gray):
+  # Thresholding
+  ret, gray = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
+  #cv2.imshow('gray', gray)
+  # cv2.waitKey()
+
+  # Closing
+  kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (14, 14))
+  gray = cv2.morphologyEx(gray, cv2.MORPH_CLOSE, kernel)
+  # gray = cv2.morphologyEx(gray, cv2.MORPH_OPEN, kernel)
+  #cv2.imshow('closed', gray)
+  # cv2.waitKey()
+
+  return gray
+
 def getCorners(frame,last_aspectRatio):
   n_detected = 0
   corners = np.empty([0, 2], dtype=np.float32)
@@ -19,6 +34,9 @@ def getCorners(frame,last_aspectRatio):
 
   # convert the frame to grayscale, blur it, and detect edges
   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+  gray = maskImage(gray)
+
   blurred = cv2.GaussianBlur(gray, (7, 7), 3)
   edged = cv2.Canny(blurred, 1, 100)
 
@@ -52,13 +70,16 @@ def getCorners(frame,last_aspectRatio):
 
       # compute whether or not the width and height, solidity, and
       # aspect ratio of the contour falls within appropriate bounds
+      #keepDims = w > 300 and h > 300
       keepDims = w > 25 and h > 25
+
       keepSolidity = solidity > 0.9
       keepAspectRatio = aspectRatio >= 1.4 and aspectRatio <= 1.8
-      #keepDims, keepAspectRatio, keepAspectRatio = True,True,True
-      #keepAspectRatio = True
+
+      keepAspectRatio = True
 
       detected = keepDims and keepSolidity and keepAspectRatio
+
 
       # ensure that the contour passes all our tests
       if detected and not cornerIn([x, y], current_corners):
@@ -158,12 +179,12 @@ def sortCorners(corners):
   else:
     return corners
 
-def checkCentroids(corners, moments):
+def checkCentroids(corners, moments, thresh, vthresh, cthresh, frame):
 
-  if len(corners) > 8:
+  if len(corners) >= 8:
     corners_out = np.empty([0, 2], dtype=np.float32)
 
-    norm_thresh = 10
+    norm_thresh = thresh
 
     for i in range(len(moments)):
       keep = False
@@ -171,7 +192,6 @@ def checkCentroids(corners, moments):
 
       for j in range(i+1, len(moments)):
         dist = np.linalg.norm(moments[i,:] - moments[j,:])
-        print('moments distance: ', dist)
         if dist < norm_thresh:
           keep = True
           keep_j = j
@@ -184,7 +204,61 @@ def checkCentroids(corners, moments):
       print('Centroid Check Failed, corners_out is empty')
       return corners
     else:
-      return corners_out
+      corners_out2 = np.empty([0, 2], dtype=np.float32)
+
+      for i in range(int(len(corners_out)/8)):
+        corners_check = corners_out[i*8:i*8+8,:].astype(int)
+
+        M = cv2.moments(corners_check[0:4,:])
+        (c1X, c1Y) = (int(M["m10"] / (M["m00"] + 1e-7)), int(M["m01"] / (M["m00"] + 1e-7)))
+
+        M = cv2.moments(corners_check[4:8,:])
+        (c2X, c2Y) = (int(M["m10"] / (M["m00"] + 1e-7)), int(M["m01"] / (M["m00"] + 1e-7)))
+
+        corners_check = sortCorners(corners_check)
+
+        #find line parameters
+        a1 = (corners_check[0,1]-corners_check[2,1]) / (corners_check[0,0]-corners_check[2,0])
+        a2 = (corners_check[1,1]-corners_check[3,1]) / (corners_check[1,0]-corners_check[3,0])
+        a3 = (corners_check[4,1]-corners_check[6,1]) / (corners_check[4,0]-corners_check[6,0])
+        a4 = (corners_check[5,1]-corners_check[7,1]) / (corners_check[5,0]-corners_check[7,0])
+
+        b1 = corners_check[0,1] - a1*corners_check[0,0]
+        b2 = corners_check[1, 1] - a2*corners_check[1, 0]
+        b3 = corners_check[4, 1] - a3*corners_check[4, 0]
+        b4 = corners_check[5, 1] - a4*corners_check[5, 0]
+
+        #find intersection points
+        x_in1 = (b2-b1)/(a1-a2)
+        y_in1 = a1*x_in1 + b1
+
+        x_in2 = (b4 - b3) / (a3 - a4)
+        y_in2 = a3 * x_in2 + b3
+
+        #Finding vanishing point -> centroid line
+        a_c = (c1Y - y_in1)/(c1X - x_in1)
+        b_c = y_in1 -a_c*x_in1
+
+        v_dist = abs(x_in1-x_in2)+abs(y_in1-y_in2)
+        c_dist = abs(a_c*c2X + b_c - c2Y)
+
+        if (v_dist < vthresh and c_dist < cthresh):
+          corners_out2 = np.vstack([corners_out2, corners_check])
+
+        #Draw lines
+        # cv2.line(frame, (int(corners_check[0,0]), int(corners_check[0,1])), (int(corners_check[2,0]), int(corners_check[2,1])), (0, 255, 0), 10)
+        # cv2.line(frame, (int(corners_check[1,0]), int(corners_check[1,1])), (int(corners_check[3,0]), int(corners_check[3,1])), (0, 255, 0), 10)
+        # cv2.line(frame, (int(corners_check[4,0]), int(corners_check[4,1])), (int(corners_check[6,0]), int(corners_check[6,1])), (0, 255, 0), 10)
+        # cv2.line(frame, (int(corners_check[5,0]), int(corners_check[5,1])), (int(corners_check[7,0]), int(corners_check[7,1])), (0, 255, 0), 10)
+        #
+        # cv2.line(frame, (int(c1X),int(c1Y)), (int(x_in1),int(y_in1)), (0, 255, 0), 10)
+        # cv2.circle(frame, (c1X, c1Y), 5, (0, 0, 255), thickness=20, lineType=8, shift=0)
+        # cv2.circle(frame, (c2X, c2Y), 5, (0, 0, 255), thickness=20, lineType=8, shift=0)
+        #
+        # cv2.imshow('lines', frame)
+        # cv2.waitKey()
+
+      return corners_out2
 
   else:
     return corners
@@ -196,4 +270,87 @@ def labelCorners(corners,frame):
     cv2.circle(frame, (int(x), int(y)), 5, (0, 255, 255), thickness=-1, lineType=8, shift=0)
     cv2.putText(frame, str(counter), (int(x + 12), int(y + 12)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
           (0, 255, 255), 2)
+  print('Number of corners: ', counter)
 
+def houghLinesDetect(frame):
+  # convert the frame to grayscale, blur it, and detect edges
+  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+  blurred = cv2.GaussianBlur(gray, (7, 7), 3)
+  edged = cv2.Canny(blurred, 1, 100)
+
+  # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+  # closing = cv2.morphologyEx(edged, cv2.MORPH_CLOSE, kernel)
+  # cv2.imshow('closed',closing)
+  # cv2.waitKey()
+
+  lines = cv2.HoughLines(edged, 1, np.pi / 180, 250)
+
+  sortedLines = np.squeeze(lines, axis = 1)
+  sortedLines = sortedLines[sortedLines[:,1].argsort()]
+
+  sortedLines_diff = np.diff(sortedLines, axis = 0)
+
+  for rho, theta in sortedLines:
+    # = line[0]
+    a = np.cos(theta)
+    b = np.sin(theta)
+    x0 = a * rho
+    y0 = b * rho
+    x1 = int(x0 + 10000 * (-b))
+    y1 = int(y0 + 10000 * (a))
+    x2 = int(x0 - 10000 * (-b))
+    y2 = int(y0 - 10000 * (a))
+
+    #frame = edged
+    cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
+
+  return frame
+
+def detectVanishingPoints(frame):
+  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+  blurred = cv2.GaussianBlur(gray, (7, 7), 3)
+  edged = cv2.Canny(blurred, 1, 100)
+
+  lines = cv2.HoughLines(edged, 1, np.pi / 180, 250)
+
+  for line in lines:
+    rho, theta = line[0]
+    a = np.cos(theta)
+    b = np.sin(theta)
+    x0 = a * rho
+    y0 = b * rho
+    x1 = int(x0 + 10000 * (-b))
+    y1 = int(y0 + 10000 * (a))
+    x2 = int(x0 - 10000 * (-b))
+    y2 = int(y0 - 10000 * (a))
+
+    cv2.line(frame, (x1, y1), (x2, y2), (255), 1)
+
+  cv2.imshow('lines', frame)
+  cv2.waitKey()
+
+def blobDetection(frame):
+  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+  gray = maskImage(gray)
+
+  params = cv2.SimpleBlobDetector_Params()
+  params.filterByArea = False
+  params.minArea = 100
+
+  params.filterByInertia = False
+  params.filterByConvexity = False
+  params.filterByCircularity = False
+  params.filterByColor = False
+
+  params.minDistBetweenBlobs = 1
+
+  detector = cv2.SimpleBlobDetector_create(params)
+  #gray = cv2.bitwise_not(gray)
+  keypoints = detector.detect(gray)
+  gray = cv2.bitwise_not(gray)
+
+  frame = cv2.drawKeypoints(gray, keypoints, np.array([]), (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+  cv2.imshow('blobs', frame)
+
+  return frame

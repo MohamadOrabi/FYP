@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import requests
 from helpers.digit_recognition import DigitDetect
 from helpers.corner_detection import *
 
@@ -17,27 +18,38 @@ sortCorners(worldPoints)
 
 x_track, y_track, w_track, h_track = 0,0,0,0
 
+url = "http://admin:admin@192.168.1.102:8081/video"
+
 camera = cv2.VideoCapture("Images/Vid.MOV")
+#camera = cv2.VideoCapture(url)
 #camera = cv2.VideoCapture(0)
+
+# while True:
+# 	_, frame = camera.read()
+# 	cv2.imshow('frame', frame)
+# 	cv2.waitKey(1)
 
 
 while True:
 	# grab the current frame and initialize the status text
 	_, frame = camera.read()
-	#frame = cv2.imread('Images/Im1.jpeg')
+	frame = cv2.flip(frame, -1)
+
+	#frame = cv2.imread('Images/Im5.jpeg')
 	# h, w = frame.shape[:2]
 	# newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 	# frame = cv2.resize(frame, (1200, 1200))
 	# frame = cv2.undistort(frame, newcameramtx, dist, None, mtx)
 
-	frame = cv2.flip(frame, -1)
+	#detectVanishingPoints(frame)
+	#frame = blobDetection(frame)
 
 	frame_to_show, detected_corners, corners, moments, last_aspectRatio = getCorners(frame, last_aspectRatio)
 
 	if detected_corners and len(corners) >= 8:
 		print("Corners Detected!")
 
-		corners = checkCentroids(corners, moments)
+		corners = checkCentroids(corners, moments, 80, 300, 10, frame)
 		corners = sortCorners(corners)
 
 		#Count the corner inside the image
@@ -65,7 +77,7 @@ while True:
 		print("Not Detected")
 
 	cv2.imshow('Frame To Show',frame_to_show)
-	if cv2.waitKey(1) & 0xFF == ord('q'):
+	if cv2.waitKey(0) & 0xFF == ord('q'):
 		break
 
 # cleanup the camera and close any open windows

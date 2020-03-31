@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="572ddc35-e760-46d7-abce-df48b324efa0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Python.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Python.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Test1_2.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/Images/Test1_2.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/corner_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/corner_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/sift_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/sift_detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +25,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/../.." value="features" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
     <option name="UPDATE_TYPE" value="MERGE" />
   </component>
@@ -33,6 +42,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="DigitDetect" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -98,9 +108,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="sift_detection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helpers" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helpers/sift_detection.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.sift_detection" />
         <item itemvalue="Python.DigitDetect" />
         <item itemvalue="Python.OpenCVCalibration" />
       </list>
@@ -169,56 +201,60 @@
     <option name="LAST_COMMIT_MESSAGE" value="Removed tracking, fixed crop, and restructured files" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="263" y="2" key="CommitChangelistDialog2" timestamp="1584516869034">
+    <state x="263" y="2" key="CommitChangelistDialog2" timestamp="1585692916649">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="263" y="2" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1584516869034" />
+    <state x="263" y="2" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1585692916649" />
     <state x="81" y="23" key="CommitChangelistDialog2/0.23.1280.711@0.23.1280.711" timestamp="1584236114005" />
     <state width="921" height="415" key="DebuggerActiveHint" timestamp="1584228919291">
       <screen x="0" y="23" width="1280" height="711" />
     </state>
     <state width="921" height="466" key="DebuggerActiveHint/0.0.1280.800@0.0.1280.800" timestamp="1583467075602" />
     <state width="921" height="415" key="DebuggerActiveHint/0.23.1280.711@0.23.1280.711" timestamp="1584228919291" />
-    <state width="629" height="211" key="GridCell.Tab.0.bottom" timestamp="1584527224080">
+    <state x="128" y="69" key="DiffContextDialog" timestamp="1585391309905">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1584527224080" />
-    <state width="629" height="218" key="GridCell.Tab.0.bottom/0.23.1280.711@0.23.1280.711" timestamp="1584356168817" />
-    <state width="629" height="211" key="GridCell.Tab.0.center" timestamp="1584527224079">
+    <state x="128" y="69" key="DiffContextDialog/0.0.1280.800@0.0.1280.800" timestamp="1585391309905" />
+    <state width="629" height="211" key="GridCell.Tab.0.bottom" timestamp="1585692906929">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1584527224079" />
-    <state width="629" height="218" key="GridCell.Tab.0.center/0.23.1280.711@0.23.1280.711" timestamp="1584356168816" />
-    <state width="629" height="211" key="GridCell.Tab.0.left" timestamp="1584527224078">
+    <state width="629" height="211" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1585692906929" />
+    <state width="629" height="211" key="GridCell.Tab.0.bottom/0.23.1280.711@0.23.1280.711" timestamp="1585680446978" />
+    <state width="629" height="211" key="GridCell.Tab.0.center" timestamp="1585692906928">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1584527224078" />
-    <state width="629" height="218" key="GridCell.Tab.0.left/0.23.1280.711@0.23.1280.711" timestamp="1584356168816" />
-    <state width="629" height="211" key="GridCell.Tab.0.right" timestamp="1584527224079">
+    <state width="629" height="211" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1585692906928" />
+    <state width="629" height="211" key="GridCell.Tab.0.center/0.23.1280.711@0.23.1280.711" timestamp="1585680446975" />
+    <state width="629" height="211" key="GridCell.Tab.0.left" timestamp="1585692906928">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1584527224079" />
-    <state width="629" height="218" key="GridCell.Tab.0.right/0.23.1280.711@0.23.1280.711" timestamp="1584356168817" />
-    <state width="629" height="262" key="GridCell.Tab.1.bottom" timestamp="1584526978394">
+    <state width="629" height="211" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1585692906928" />
+    <state width="629" height="211" key="GridCell.Tab.0.left/0.23.1280.711@0.23.1280.711" timestamp="1585680446974" />
+    <state width="629" height="211" key="GridCell.Tab.0.right" timestamp="1585692906929">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1584526978394" />
-    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.23.1280.711@0.23.1280.711" timestamp="1584526797306" />
-    <state width="629" height="262" key="GridCell.Tab.1.center" timestamp="1584526978392">
+    <state width="629" height="211" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1585692906929" />
+    <state width="629" height="211" key="GridCell.Tab.0.right/0.23.1280.711@0.23.1280.711" timestamp="1585680446977" />
+    <state width="629" height="262" key="GridCell.Tab.1.bottom" timestamp="1585691180618">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1584526978392" />
-    <state width="629" height="262" key="GridCell.Tab.1.center/0.23.1280.711@0.23.1280.711" timestamp="1584526797305" />
-    <state width="629" height="262" key="GridCell.Tab.1.left" timestamp="1584526978392">
+    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1585691180618" />
+    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.23.1280.711@0.23.1280.711" timestamp="1585687742486" />
+    <state width="629" height="262" key="GridCell.Tab.1.center" timestamp="1585691180614">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1584526978392" />
-    <state width="629" height="262" key="GridCell.Tab.1.left/0.23.1280.711@0.23.1280.711" timestamp="1584526797304" />
-    <state width="629" height="262" key="GridCell.Tab.1.right" timestamp="1584526978393">
+    <state width="629" height="262" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1585691180614" />
+    <state width="629" height="262" key="GridCell.Tab.1.center/0.23.1280.711@0.23.1280.711" timestamp="1585687742484" />
+    <state width="629" height="262" key="GridCell.Tab.1.left" timestamp="1585691180613">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1584526978393" />
-    <state width="629" height="262" key="GridCell.Tab.1.right/0.23.1280.711@0.23.1280.711" timestamp="1584526797306" />
+    <state width="629" height="262" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1585691180613" />
+    <state width="629" height="262" key="GridCell.Tab.1.left/0.23.1280.711@0.23.1280.711" timestamp="1585687742483" />
+    <state width="629" height="262" key="GridCell.Tab.1.right" timestamp="1585691180616">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="629" height="262" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1585691180616" />
+    <state width="629" height="262" key="GridCell.Tab.1.right/0.23.1280.711@0.23.1280.711" timestamp="1585687742485" />
     <state x="128" y="69" key="MergeDialog" timestamp="1583461106783">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -227,15 +263,24 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="351" y="123" key="MultipleFileMergeDialog/0.0.1280.800@0.0.1280.800" timestamp="1583461106821" />
+    <state x="141" y="39" key="SettingsEditor" timestamp="1585391925075">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="141" y="39" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1585391925075" />
     <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1584517312062">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1584517312062" />
     <state x="240" y="147" key="Vcs.Push.Dialog.v2/0.23.1280.711@0.23.1280.711" timestamp="1584236117549" />
-    <state x="317" y="232" key="com.intellij.ide.util.TipDialog" timestamp="1584514274043">
+    <state width="640" height="400" key="XDebugger.FullValuePopup" timestamp="1585690837516">
+      <screen x="0" y="23" width="1280" height="711" />
+    </state>
+    <state width="640" height="400" key="XDebugger.FullValuePopup/0.0.1280.800@0.0.1280.800" timestamp="1585689651208" />
+    <state width="640" height="400" key="XDebugger.FullValuePopup/0.23.1280.711@0.23.1280.711" timestamp="1585690837516" />
+    <state x="317" y="232" key="com.intellij.ide.util.TipDialog" timestamp="1585677621494">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="317" y="232" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1584514274043" />
+    <state x="317" y="232" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1585677621494" />
     <state x="317" y="229" key="com.intellij.ide.util.TipDialog/0.23.1280.711@0.23.1280.711" timestamp="1584224204840" />
     <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1583460820954">
       <screen x="0" y="0" width="1280" height="800" />
@@ -245,6 +290,10 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="332" y="198" key="git4idea.merge.GitPullDialog/0.0.1280.800@0.0.1280.800" timestamp="1584517304078" />
+    <state x="253" y="255" key="git4idea.ui.GitUnstashDialog" timestamp="1585391284440">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="253" y="255" key="git4idea.ui.GitUnstashDialog/0.0.1280.800@0.0.1280.800" timestamp="1585391284440" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

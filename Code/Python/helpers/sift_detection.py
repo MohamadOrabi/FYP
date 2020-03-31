@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+from helpers.corner_detection import maskImage
 import imutils
 
 def templateMatching(training_img, testing_img, visualize):
@@ -62,6 +63,12 @@ def SIFTMatching(training_img, testing_img, method, edge_flag):
     training_img_orig = training_img
     testing_img_orig = testing_img
 
+    training_img = cv2.cvtColor(training_img, cv2.COLOR_BGR2GRAY)
+    testing_img = cv2.cvtColor(testing_img, cv2.COLOR_BGR2GRAY)
+
+    testing_img = maskImage(testing_img)
+    training_img = maskImage(training_img)
+
     # gray = np.float32(testing_img)
     # dst = cv2.cornerHarris(gray,2,3,0.04)
     # dst[dst>0.0001*dst.max()]=[255]
@@ -75,7 +82,6 @@ def SIFTMatching(training_img, testing_img, method, edge_flag):
         # Adding Canny Filter
         blurred = cv2.GaussianBlur(training_img, (7, 7), 0)
         training_img = cv2.Canny(blurred, 50, 150)
-        cv2.rectangle(training_img, (0, 0), (training_img.shape[1]-1,training_img.shape[0]-1), (255, 0, 0), 1)
 
         blurred = cv2.GaussianBlur(testing_img, (7, 7), 0)
         testing_img = cv2.Canny(blurred, 10, 150)
@@ -93,7 +99,7 @@ def SIFTMatching(training_img, testing_img, method, edge_flag):
         # testing_img = cv2.Laplacian(testing_img, cv2.CV_64F)
 
     if method == "sift":
-        detector = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.01, edgeThreshold = 99999)
+        detector = cv2.xfeatures2d.SIFT_create(contrastThreshold = 0.01, edgeThreshold = 9999999)
     elif method == "surf":
         detector = cv2.xfeatures2d.SURF_create(4000)
         #detector.setUpright(True)
@@ -159,26 +165,31 @@ def SIFTMatching(training_img, testing_img, method, edge_flag):
 ############################################################################################################################
 
 
-train_img = cv2.imread("Images/Sign1.jpeg")
+train_img = cv2.imread("../Images/Sign2.jpeg")
+
 #cv2.rectangle(train_img, (0, 0), (train_img.shape[1]-1,train_img.shape[0]-1), (255, 255, 255), 1)
 #cv2.imshow('train img', train_img)
 #cv2.waitKey()
 
-test_img = cv2.imread("Images/Test1_2.jpeg")
+test_img = cv2.imread("../Images/IMG_200.jpeg")
+#test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
+
 #templateMatching(train_img, test_img, False)
 
-SIFTMatching(train_img, test_img, "sift", True) # This + canny + contrast threshold of 0.01 works well!
+SIFTMatching(train_img, test_img, "sift", False) # This + canny + contrast threshold of 0.01 works well!
 
 #SIFTMatching(train_img, test_img, "surf", False) # This + canny + contrast threshold of 0.01 works well!
 
 
 
-# camera = cv2.VideoCapture("Images/Vid.mov")
-#
-# while True:
-#     _, frame = camera.read()
-#     frame = cv2.flip(frame, 0)
-#     frame = cv2.flip(frame,1)
-#     SIFTMatching(train_img, frame, "sift")
+camera = cv2.VideoCapture("../Images/Vid.mov")
 
-#cv2.waitKey()
+while True:
+    train_img = cv2.imread("../Images/Sign2.jpeg")
+
+    _, frame = camera.read()
+    frame = cv2.flip(frame, 0)
+    frame = cv2.flip(frame,1)
+    SIFTMatching(train_img, frame, "sift", False)
+
+cv2.waitKey()
