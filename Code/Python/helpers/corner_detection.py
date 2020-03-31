@@ -73,7 +73,7 @@ def getCorners(frame,last_aspectRatio):
       #keepDims = w > 300 and h > 300
       keepDims = w > 25 and h > 25
 
-      keepSolidity = solidity > 0.9
+      keepSolidity = solidity > 0.9 or True
       keepAspectRatio = aspectRatio >= 1.4 and aspectRatio <= 1.8
 
       keepAspectRatio = True
@@ -228,21 +228,25 @@ def checkCentroids(corners, moments, thresh, vthresh, cthresh, frame):
         b3 = corners_check[4, 1] - a3*corners_check[4, 0]
         b4 = corners_check[5, 1] - a4*corners_check[5, 0]
 
-        #find intersection points
-        x_in1 = (b2-b1)/(a1-a2)
-        y_in1 = a1*x_in1 + b1
+        try:
+          #find intersection points
+          x_in1 = (b2-b1)/(a1-a2)
+          y_in1 = a1*x_in1 + b1
 
-        x_in2 = (b4 - b3) / (a3 - a4)
-        y_in2 = a3 * x_in2 + b3
+          x_in2 = (b4 - b3) / (a3 - a4)
+          y_in2 = a3 * x_in2 + b3
 
-        #Finding vanishing point -> centroid line
-        a_c = (c1Y - y_in1)/(c1X - x_in1)
-        b_c = y_in1 -a_c*x_in1
+          #Finding vanishing point -> centroid line
+          a_c = (c1Y - y_in1)/(c1X - x_in1)
+          b_c = y_in1 -a_c*x_in1
 
-        v_dist = abs(x_in1-x_in2)+abs(y_in1-y_in2)
-        c_dist = abs(a_c*c2X + b_c - c2Y)
+          v_dist = abs(x_in1-x_in2)+abs(y_in1-y_in2)
+          c_dist = abs(a_c*c2X + b_c - c2Y)
 
-        if (v_dist < vthresh and c_dist < cthresh):
+          if (v_dist < vthresh and c_dist < cthresh):
+            corners_out2 = np.vstack([corners_out2, corners_check])
+
+        except:
           corners_out2 = np.vstack([corners_out2, corners_check])
 
         #Draw lines

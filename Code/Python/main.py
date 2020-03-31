@@ -20,8 +20,8 @@ x_track, y_track, w_track, h_track = 0,0,0,0
 
 url = "http://admin:admin@192.168.1.102:8081/video"
 
-camera = cv2.VideoCapture("Images/Vid.MOV")
-#camera = cv2.VideoCapture(url)
+#camera = cv2.VideoCapture("Images/Vid.MOV")
+camera = cv2.VideoCapture(url)
 #camera = cv2.VideoCapture(0)
 
 # while True:
@@ -63,11 +63,14 @@ while True:
 			h_track = int(corners[7, 1] - y_track)
 
 			# Get digit in rectangle
-			roi = frame[y_track:y_track + h_track, x_track:x_track + w_track]
-			roi = cv2.bitwise_not(roi)
-			digit = digitDetect.recognise_digit(roi)
-			# cv2.imshow('roi', roi)
-			print("Digit: ", digit)
+			if h_track >=5 and w_track >=5:
+				roi = frame[y_track:y_track + h_track, x_track:x_track + w_track]
+				roi = cv2.bitwise_not(roi)
+				digit = digitDetect.recognise_digit(roi)
+				# cv2.imshow('roi', roi)
+				print("Digit: ", digit)
+			else:
+				print('Invalid ROI!')
 
 			pos = estimateCameraPose(worldPoints, corners, mtx, dist)
 			print("Distance: ", np.linalg.norm(pos))
@@ -77,7 +80,7 @@ while True:
 		print("Not Detected")
 
 	cv2.imshow('Frame To Show',frame_to_show)
-	if cv2.waitKey(0) & 0xFF == ord('q'):
+	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 
 # cleanup the camera and close any open windows
