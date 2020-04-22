@@ -12,16 +12,17 @@ PORT = 65432        # The port used by the server
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     while True:
+        #The string to be sent should be in the format: label + white space + x + white space + y
+        #For example when retreiving shampoo: 2 0 1.3
         str1 = input("Enter label and coordinates: ")
         s.sendall(str1.encode())
-        data = s.recv(1024).decode()
-        print(data)
 '''
 
 from PIL import Image
 import dijkstra as d
 import math
 import socket
+import json
 
 # Convert real coordinates to map coordinates
 def convertRealToMap(coordinate):
@@ -37,7 +38,9 @@ def rotate_around_point(coordinates, degrees, offset):
     qy = offset_y + -sin_rad * x + cos_rad * y
     return qx, qy
 
-def navigate(input_file, output_file):
+def navigate(map_file, items_file, labels_file):
+    # Each item "x" will have a file x_output.png which contains an image of the path
+    output_file = "output.png"
     # Black
     COLOR_WALL = (0, 0, 0, 255)
     # White
@@ -54,10 +57,10 @@ def navigate(input_file, output_file):
     PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
     try:
-        image = Image.open(input_file)
+        image = Image.open(map_file)
         imagePixels = image.load()
     except:
-        print("Could not load file", input_file)
+        print("Could not load file", map_file)
         exit()
 
     # Saving the imagePixels in a 2D array to refer to this whenever resetting pixels
@@ -66,31 +69,47 @@ def navigate(input_file, output_file):
         for y in range(image.height):
             defaultPixels[x][y] = imagePixels[x, y]
 
-    # access points of items
-    destinations = {
-        "apple": (1.1, 0),
-        "shampoo": (2.2, 1.4),
-        "deodorant": (1.7, 0.5),
-    }
-    # Distances to reach the items from varying starting points
-    # Every time we reach an item, we remove it from the distances & graphs dictionary and set  visited flag in destinations as false
-    distances = {
-        "apple": float("inf"),
-        "shampoo": float("inf"),
-        "deodorant": float("inf")
-    }
-    graphs = {
-        "apple": None,
-        "shampoo": None,
-        "deodorant": None
-    }
-    # Label with its centre and rotation
-    # The labels over here only help in reaching shampoo. We need to add more labels for the other elements
-    labels = {
-        "1": ((1.4, 1.7), 0),   # located in pixel (4,5) facing downward
-        "2": ((1.7, 2.2), -90),  # located in pixel (5,7) facing the right
-        "3": ((2.3, 1.3), -90)  # located in pixel (7,4) facing the right
-    }
+    f = open(items_file)
+    data = json.load(f)
+    destinations = dict()
+    distances = dict()
+    graphs = dict()
+    for k, v in data.items():
+        destinations[k] = tuple(v)
+        distances[k] = float("inf")
+        graphs[k] = None
+
+    # TODO: The labels over here only help in reaching shampoo. We need to add more labels for the other items
+    f = open(labels_file)
+    data = json.load(f)
+    labels = dict()
+    for k, v in data.items():
+        labels[k] = tuple([tuple(v[0]), v[1]])
+
+    # # access points of items
+    # destinations = {
+    #     "apple": (1.1, 0),
+    #     "shampoo": (2.2, 1.4),
+    #     "deodorant": (1.7, 0.5),
+    # }
+    # # Distances to reach the items from varying starting points
+    # # Every time we reach an item, we remove it from the distances & graphs dictionary and set  visited flag in destinations as false
+    # distances = {
+    #     "apple": float("inf"),
+    #     "shampoo": float("inf"),
+    #     "deodorant": float("inf")
+    # }
+    # graphs = {
+    #     "apple": None,
+    #     "shampoo": None,
+    #     "deodorant": None
+    # }
+    # # Label with its centre and rotation
+    # labels = {
+    #     "1": ((1.4, 1.7), 0),   # located in pixel (4,5) facing downward
+    #     "2": ((1.7, 2.2), -90),  # located in pixel (5,7) facing the right
+    #     "3": ((2.3, 1.3), -90)  # located in pixel (7,4) facing the right
+    # }
 
     # Initial point that is replaced at the end with whatever destination we reach
     initialX = 0.2
@@ -99,8 +118,10 @@ def navigate(input_file, output_file):
     # Establishing socket and listening
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
+        print("Waiting for connection...")
         s.listen()
         conn, addr = s.accept()
+        print("Connected")
         with conn:
             while len(distances) > 0:
                 nodes = [[None for _ in range(image.width)] for __ in range(image.height)]
@@ -159,7 +180,6 @@ def navigate(input_file, output_file):
                             current_node = neighbor
                     imagePixels[current_node.x, current_node.y] = COLOR_SOLVED
 
-                # Outputting the path as an image as well
                 imagePixels[destination_node.x, destination_node.y] = COLOR_END
                 image.save(item + "_" + output_file, "PNG")
                 # Resetting the image pixels that were coloured for the next item's path
@@ -198,9 +218,8 @@ def navigate(input_file, output_file):
                                 neighbor.visited = True
                                 # Printing the instructions on how to move to reach destination
                                 if neighbor.x == currentMapX and neighbor.y == currentMapY:
-                                    # Sending directions to client and also printing them
-                                    to_send = "Heading towards " + item + ": Move by " + str(current_node.x - neighbor.x) + " x blocks & " + str(current_node.y - neighbor.y) + " y blocks"
-                                    conn.sendall(to_send.encode())
+                                    # Printing directions
+                                    print("Heading towards " + item + ": Move by " + str(current_node.x - neighbor.x) + " x blocks & " + str(current_node.y - neighbor.y) + " y blocks")
                                 current_node = neighbor
 
                 # Change initial point at the end to the destination point
@@ -211,3 +230,4 @@ def navigate(input_file, output_file):
                 del distances[item]
                 del graphs[item]
 
+# navigate("map.png", "items.json", "labels.json")
