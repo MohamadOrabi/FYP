@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="572ddc35-e760-46d7-abce-df48b324efa0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/helpers/testSocket.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers/corner_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/corner_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/navigation.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/navigation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +41,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.testSocket">
     <configuration name="DigitDetect" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -55,27 +55,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$USER_HOME$/Downloads/DigitDetect/DigitDetect.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="OpenCVCalibration" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Python" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/OpenCVCalibration.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -105,6 +84,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="navigation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helpers" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helpers/navigation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="sift_detection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -126,12 +126,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="testSocket" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helpers" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helpers/testSocket.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.testSocket" />
+        <item itemvalue="Python.navigation" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python.sift_detection" />
         <item itemvalue="Python.DigitDetect" />
-        <item itemvalue="Python.OpenCVCalibration" />
       </list>
     </recent_temporary>
   </component>
@@ -181,7 +203,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585693062292</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Caught division by 0 exceptions.">
+      <created>1585695434202</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1585695434202</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -203,13 +232,14 @@
     <MESSAGE value="Added convexHull and Dialation, fixed a couple of bugs. mtx and dist.npy might be wrong!" />
     <MESSAGE value="Removed tracking, fixed crop, and restructured files" />
     <MESSAGE value="Major detection improvements. Code now checks for the distance between vanishing points, and make sure the centroids and the vainishing points are collinear. Also added live phone camera support. (Install IP Camera Lite on your phone)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Major detection improvements. Code now checks for the distance between vanishing points, and make sure the centroids and the vainishing points are collinear. Also added live phone camera support. (Install IP Camera Lite on your phone)" />
+    <MESSAGE value="Caught division by 0 exceptions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Caught division by 0 exceptions." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="263" y="2" key="CommitChangelistDialog2" timestamp="1585693061062">
+    <state x="0" y="2" key="CommitChangelistDialog2" timestamp="1585695433851">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="263" y="2" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1585693061062" />
+    <state x="0" y="2" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1585695433851" />
     <state x="81" y="23" key="CommitChangelistDialog2/0.23.1280.711@0.23.1280.711" timestamp="1584236114005" />
     <state width="921" height="415" key="DebuggerActiveHint" timestamp="1584228919291">
       <screen x="0" y="23" width="1280" height="711" />
@@ -220,45 +250,45 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="128" y="69" key="DiffContextDialog/0.0.1280.800@0.0.1280.800" timestamp="1585391309905" />
-    <state width="629" height="262" key="GridCell.Tab.0.bottom" timestamp="1585695413670">
+    <state width="629" height="211" key="GridCell.Tab.0.bottom" timestamp="1587895472629">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1585695413670" />
+    <state width="629" height="211" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1587895472629" />
     <state width="629" height="211" key="GridCell.Tab.0.bottom/0.23.1280.711@0.23.1280.711" timestamp="1585680446978" />
-    <state width="629" height="262" key="GridCell.Tab.0.center" timestamp="1585695413669">
+    <state width="629" height="211" key="GridCell.Tab.0.center" timestamp="1587895472628">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1585695413669" />
+    <state width="629" height="211" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1587895472628" />
     <state width="629" height="211" key="GridCell.Tab.0.center/0.23.1280.711@0.23.1280.711" timestamp="1585680446975" />
-    <state width="629" height="262" key="GridCell.Tab.0.left" timestamp="1585695413669">
+    <state width="629" height="211" key="GridCell.Tab.0.left" timestamp="1587895472627">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1585695413669" />
+    <state width="629" height="211" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1587895472627" />
     <state width="629" height="211" key="GridCell.Tab.0.left/0.23.1280.711@0.23.1280.711" timestamp="1585680446974" />
-    <state width="629" height="262" key="GridCell.Tab.0.right" timestamp="1585695413670">
+    <state width="629" height="211" key="GridCell.Tab.0.right" timestamp="1587895472628">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1585695413670" />
+    <state width="629" height="211" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1587895472628" />
     <state width="629" height="211" key="GridCell.Tab.0.right/0.23.1280.711@0.23.1280.711" timestamp="1585680446977" />
-    <state width="629" height="262" key="GridCell.Tab.1.bottom" timestamp="1585695413672">
+    <state width="629" height="262" key="GridCell.Tab.1.bottom" timestamp="1585695920754">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1585695413672" />
+    <state width="629" height="262" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1585695920754" />
     <state width="629" height="262" key="GridCell.Tab.1.bottom/0.23.1280.711@0.23.1280.711" timestamp="1585687742486" />
-    <state width="629" height="262" key="GridCell.Tab.1.center" timestamp="1585695413671">
+    <state width="629" height="262" key="GridCell.Tab.1.center" timestamp="1585695920754">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1585695413671" />
+    <state width="629" height="262" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1585695920754" />
     <state width="629" height="262" key="GridCell.Tab.1.center/0.23.1280.711@0.23.1280.711" timestamp="1585687742484" />
-    <state width="629" height="262" key="GridCell.Tab.1.left" timestamp="1585695413671">
+    <state width="629" height="262" key="GridCell.Tab.1.left" timestamp="1585695920753">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1585695413671" />
+    <state width="629" height="262" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1585695920753" />
     <state width="629" height="262" key="GridCell.Tab.1.left/0.23.1280.711@0.23.1280.711" timestamp="1585687742483" />
-    <state width="629" height="262" key="GridCell.Tab.1.right" timestamp="1585695413672">
+    <state width="629" height="262" key="GridCell.Tab.1.right" timestamp="1585695920754">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="262" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1585695413672" />
+    <state width="629" height="262" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1585695920754" />
     <state width="629" height="262" key="GridCell.Tab.1.right/0.23.1280.711@0.23.1280.711" timestamp="1585687742485" />
     <state x="128" y="69" key="MergeDialog" timestamp="1583461106783">
       <screen x="0" y="0" width="1280" height="800" />
@@ -272,25 +302,25 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="141" y="39" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1585391925075" />
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1585693065997">
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1585695436106">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1585693065997" />
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1585695436106" />
     <state x="240" y="147" key="Vcs.Push.Dialog.v2/0.23.1280.711@0.23.1280.711" timestamp="1584236117549" />
     <state width="640" height="400" key="XDebugger.FullValuePopup" timestamp="1585690837516">
       <screen x="0" y="23" width="1280" height="711" />
     </state>
     <state width="640" height="400" key="XDebugger.FullValuePopup/0.0.1280.800@0.0.1280.800" timestamp="1585689651208" />
     <state width="640" height="400" key="XDebugger.FullValuePopup/0.23.1280.711@0.23.1280.711" timestamp="1585690837516" />
-    <state x="317" y="232" key="com.intellij.ide.util.TipDialog" timestamp="1585677621494">
+    <state x="317" y="228" key="com.intellij.ide.util.TipDialog" timestamp="1587894291495">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="317" y="232" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1585677621494" />
+    <state x="317" y="228" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1587894291495" />
     <state x="317" y="229" key="com.intellij.ide.util.TipDialog/0.23.1280.711@0.23.1280.711" timestamp="1584224204840" />
-    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1583460820954">
+    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587894407050">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1583460820954" />
+    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1587894407050" />
     <state x="332" y="198" key="git4idea.merge.GitPullDialog" timestamp="1584517304078">
       <screen x="0" y="0" width="1280" height="800" />
     </state>

@@ -230,4 +230,4 @@ def navigate(map_file, items_file, labels_file):
                 del distances[item]
                 del graphs[item]
 
-# navigate("map.png", "items.json", "labels.json")
+navigate("../Images/Navigation/map.png", "../Images/Navigation/items.json", "../Images/Navigation/labels.json")
