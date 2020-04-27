@@ -197,7 +197,11 @@ def navigate(map_file, items_file, labels_file):
                         raise Exception("Disconnected from client")
                     # Function that converts camera plane coordinates to map plane coordinates
                     labelNo, cameraRealX, cameraRealY = data.decode().split()
-                    currentRealX, currentRealY = rotate_around_point((float(cameraRealX), float(cameraRealY)), labels[labelNo][1], labels[labelNo][0])
+                    # Handling invalid label received
+                    try:
+                        currentRealX, currentRealY = rotate_around_point((float(cameraRealX), float(cameraRealY)), labels[labelNo][1], labels[labelNo][0])
+                    except KeyError:
+                        continue
                     currentMapX = convertRealToMap(currentRealX)
                     currentMapY = convertRealToMap(currentRealY)
 
