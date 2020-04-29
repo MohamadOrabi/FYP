@@ -49,8 +49,12 @@ while True:
 	if len(corners) >= 8:
 		print("Corners Detected!")
 
-		corners = checkCentroids(corners, moments, 80, 300, 10, frame)
-		#cv2.drawContours(frame, [corners], -1, (0, 0, 255), 3)
+		#corners = checkCentroids(corners, moments, 80, 100, 10, frame)
+		#corners = checkCentroids(corners, moments, 80, 9999, 10, frame)
+
+		#cv2.drawContours(frame, corners, -1, (0, 0, 255), 3)
+		#frame = drawCorners(frame, corners)
+		cv2.imwrite('Results/thresh_no.jpeg', frame)
 		cv2.imshow('new', frame)
 		corners = sortCorners(corners)
 
@@ -82,6 +86,7 @@ while True:
 		print("Not Detected")
 
 	cv2.imshow('Frame To Show',frame_to_show)
+	cv2.imwrite('Results/frame_to_show.jpeg',frame_to_show)
 	cv2.waitKey()
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break

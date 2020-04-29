@@ -4,9 +4,19 @@ import imutils
 
 def cornerIn(curr, image_points):
   for x, y in image_points:
-    if abs(x - curr[0]) < 5 and abs(y - curr[1]) < 5:
+    if abs(x - curr[0]) < 50 and abs(y - curr[1]) < 50:
       return True
   return False
+
+def drawCorners(frame, corners):
+  for i in range(int(len(corners) / 4)):
+    c = corners[i*4:i*4+4,:].astype(int)
+    c[[2,3],:] = c[[3,2],:]
+
+    cv2.drawContours(frame, [c], -1, (0, 0, 255), 3)
+
+  return frame
+
 
 def maskImage(gray):
   # Thresholding
@@ -53,7 +63,7 @@ def getCorners(frame,last_aspectRatio):
   kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
   edged = cv2.dilate(edged, kernel) # Also try cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
   cv2.imwrite('Results/dilated_edged.jpeg', edged)
-  cv2.imshow("dilated_edged", edged)
+  #cv2.imshow("dilated_edged", edged)
 
   # find contours in the edge map
   cnts = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -101,7 +111,7 @@ def getCorners(frame,last_aspectRatio):
         corners = np.vstack([corners, approx])
 
         # draw an outline around the target and update the status text
-        #cv2.drawContours(frame, [approx], -1, (0, 0, 255), 3)
+        cv2.drawContours(frame, [approx], -1, (0, 0, 255), 3)
         last_aspectRatio = aspectRatio
         status = "Target(s) Acquired"
         # compute the center of the contour region and draw the crosshairs
@@ -211,7 +221,7 @@ def checkCentroids(corners, moments, thresh, vthresh, cthresh, frame):
 
     if corners_out.shape[0] == 0:
       print('Centroid Check Failed, corners_out is empty')
-      return corners
+      return corners_out
     else:
       corners_out2 = np.empty([0, 2], dtype=np.float32)
 
