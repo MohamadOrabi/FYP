@@ -12,7 +12,7 @@ def maskImage(gray):
   # Thresholding
   ret, gray = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
   #cv2.imshow('gray', gray)
-  # cv2.waitKey()
+  #cv2.waitKey()
 
   # Closing
   kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (14, 14))
@@ -34,15 +34,26 @@ def getCorners(frame,last_aspectRatio):
 
   # convert the frame to grayscale, blur it, and detect edges
   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+  cv2.imwrite('Results/orig.jpeg', frame)
+  cv2.imwrite('Results/gray.jpeg', gray)
+  # cv2.imshow('Original', gray)
+  # cv2.waitKey()
 
   gray = maskImage(gray)
+  cv2.imwrite('Results/gray_masked.jpeg', gray)
+  # cv2.imshow('gray', gray)
+  # cv2.waitKey()
 
   blurred = cv2.GaussianBlur(gray, (7, 7), 3)
   edged = cv2.Canny(blurred, 1, 100)
+  cv2.imwrite('Results/edged.jpeg', edged)
+  # cv2.imshow('edged', edged)
+  # cv2.waitKey()
 
   kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
   edged = cv2.dilate(edged, kernel) # Also try cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
-  #cv2.imshow("edged",edged)
+  cv2.imwrite('Results/dilated_edged.jpeg', edged)
+  cv2.imshow("dilated_edged", edged)
 
   # find contours in the edge map
   cnts = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -80,7 +91,6 @@ def getCorners(frame,last_aspectRatio):
 
       detected = keepDims and keepSolidity and keepAspectRatio
 
-
       # ensure that the contour passes all our tests
       if detected and not cornerIn([x, y], current_corners):
         detected_corners = True
@@ -91,7 +101,7 @@ def getCorners(frame,last_aspectRatio):
         corners = np.vstack([corners, approx])
 
         # draw an outline around the target and update the status text
-        cv2.drawContours(frame, [approx], -1, (0, 0, 255), 3)
+        #cv2.drawContours(frame, [approx], -1, (0, 0, 255), 3)
         last_aspectRatio = aspectRatio
         status = "Target(s) Acquired"
         # compute the center of the contour region and draw the crosshairs
@@ -101,6 +111,7 @@ def getCorners(frame,last_aspectRatio):
         cv2.circle(frame, (cX, cY), 5, (0, 0, 255), thickness=-1, lineType=8, shift=0)
 
   # draw the status text on the frame
+  cv2.imwrite('Results/dims.jpeg', frame)
   cv2.putText(frame,status + " - Aspect Ratio: " + str('%0.3f' % last_aspectRatio) + " - n_detected: " + str(n_detected), (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
   return frame, detected_corners, corners, moments, last_aspectRatio
 
@@ -175,9 +186,7 @@ def sortCorners(corners):
     corners = np.insert(corners, 2, np.array([corners[-2], corners[-1]]), axis=0)
     corners = np.delete(corners, [8, 9], axis=0)
 
-    return corners
-  else:
-    return corners
+  return corners
 
 def checkCentroids(corners, moments, thresh, vthresh, cthresh, frame):
 

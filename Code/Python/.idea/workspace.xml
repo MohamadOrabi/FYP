@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="572ddc35-e760-46d7-abce-df48b324efa0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/helpers/testSocket.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers/navigation.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/navigation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/corner_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/corner_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/../.." value="features" />
+        <entry key="$PROJECT_DIR$/../.." value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -41,7 +41,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.testSocket">
+  <component name="RunManager" selected="Python.main">
     <configuration name="DigitDetect" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -149,9 +149,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.testSocket" />
         <item itemvalue="Python.navigation" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.sift_detection" />
         <item itemvalue="Python.DigitDetect" />
       </list>
@@ -210,7 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585695434202</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Added testSocket.py and fixed directories">
+      <created>1587896050787</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1587896050787</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -233,13 +240,14 @@
     <MESSAGE value="Removed tracking, fixed crop, and restructured files" />
     <MESSAGE value="Major detection improvements. Code now checks for the distance between vanishing points, and make sure the centroids and the vainishing points are collinear. Also added live phone camera support. (Install IP Camera Lite on your phone)" />
     <MESSAGE value="Caught division by 0 exceptions." />
-    <option name="LAST_COMMIT_MESSAGE" value="Caught division by 0 exceptions." />
+    <MESSAGE value="Added testSocket.py and fixed directories" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added testSocket.py and fixed directories" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="0" y="2" key="CommitChangelistDialog2" timestamp="1585695433851">
+    <state x="0" y="23" width="753" height="708" key="CommitChangelistDialog2" timestamp="1587896050170">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="0" y="2" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1585695433851" />
+    <state x="0" y="23" width="753" height="708" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1587896050170" />
     <state x="81" y="23" key="CommitChangelistDialog2/0.23.1280.711@0.23.1280.711" timestamp="1584236114005" />
     <state width="921" height="415" key="DebuggerActiveHint" timestamp="1584228919291">
       <screen x="0" y="23" width="1280" height="711" />
@@ -250,25 +258,25 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="128" y="69" key="DiffContextDialog/0.0.1280.800@0.0.1280.800" timestamp="1585391309905" />
-    <state width="629" height="211" key="GridCell.Tab.0.bottom" timestamp="1587895472629">
+    <state width="629" height="211" key="GridCell.Tab.0.bottom" timestamp="1588191913598">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1587895472629" />
+    <state width="629" height="211" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1588191913598" />
     <state width="629" height="211" key="GridCell.Tab.0.bottom/0.23.1280.711@0.23.1280.711" timestamp="1585680446978" />
-    <state width="629" height="211" key="GridCell.Tab.0.center" timestamp="1587895472628">
+    <state width="629" height="211" key="GridCell.Tab.0.center" timestamp="1588191913596">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1587895472628" />
+    <state width="629" height="211" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1588191913596" />
     <state width="629" height="211" key="GridCell.Tab.0.center/0.23.1280.711@0.23.1280.711" timestamp="1585680446975" />
-    <state width="629" height="211" key="GridCell.Tab.0.left" timestamp="1587895472627">
+    <state width="629" height="211" key="GridCell.Tab.0.left" timestamp="1588191913595">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1587895472627" />
+    <state width="629" height="211" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1588191913595" />
     <state width="629" height="211" key="GridCell.Tab.0.left/0.23.1280.711@0.23.1280.711" timestamp="1585680446974" />
-    <state width="629" height="211" key="GridCell.Tab.0.right" timestamp="1587895472628">
+    <state width="629" height="211" key="GridCell.Tab.0.right" timestamp="1588191913597">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="629" height="211" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1587895472628" />
+    <state width="629" height="211" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1588191913597" />
     <state width="629" height="211" key="GridCell.Tab.0.right/0.23.1280.711@0.23.1280.711" timestamp="1585680446977" />
     <state width="629" height="262" key="GridCell.Tab.1.bottom" timestamp="1585695920754">
       <screen x="0" y="0" width="1280" height="800" />
@@ -302,25 +310,25 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="141" y="39" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1585391925075" />
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1585695436106">
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1587896062505">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1585695436106" />
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1587896062505" />
     <state x="240" y="147" key="Vcs.Push.Dialog.v2/0.23.1280.711@0.23.1280.711" timestamp="1584236117549" />
     <state width="640" height="400" key="XDebugger.FullValuePopup" timestamp="1585690837516">
       <screen x="0" y="23" width="1280" height="711" />
     </state>
     <state width="640" height="400" key="XDebugger.FullValuePopup/0.0.1280.800@0.0.1280.800" timestamp="1585689651208" />
     <state width="640" height="400" key="XDebugger.FullValuePopup/0.23.1280.711@0.23.1280.711" timestamp="1585690837516" />
-    <state x="317" y="228" key="com.intellij.ide.util.TipDialog" timestamp="1587894291495">
+    <state x="317" y="228" key="com.intellij.ide.util.TipDialog" timestamp="1588181668981">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="317" y="228" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1587894291495" />
+    <state x="317" y="228" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1588181668981" />
     <state x="317" y="229" key="com.intellij.ide.util.TipDialog/0.23.1280.711@0.23.1280.711" timestamp="1584224204840" />
-    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587894407050">
+    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1588191831486">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1587894407050" />
+    <state x="423" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1588191831486" />
     <state x="332" y="198" key="git4idea.merge.GitPullDialog" timestamp="1584517304078">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
