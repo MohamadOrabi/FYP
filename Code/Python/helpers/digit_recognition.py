@@ -4,7 +4,7 @@ from keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPooling2D
 from keras.models import load_model
 from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
-
+import numpy as np
 # Digit Detection
 class DigitDetect:
 	input_shape = (28, 28, 1)
@@ -13,42 +13,42 @@ class DigitDetect:
 	def __init__(self):
 		pass
 
-	# Create new model
-	# def create_model(self):
-	# 	(self.x_train, self.y_train), (self.x_test, self.y_test) = tf.keras.datasets.mnist.load_data()
-	# 	# Reshaping the array to 4-dims so that it can work with the Keras API
-	# 	self.x_train = self.x_train.reshape(self.x_train.shape[0], 28, 28, 1)
-	# 	self.x_test = self.x_test.reshape(self.x_test.shape[0], 28, 28, 1)
-	# 	# Making sure that the values are float so that we can get decimal points after division
-	# 	self.x_train = self.x_train.astype('float32')
-	# 	self.x_test = self.x_test.astype('float32')
-	# 	# Normalizing the RGB codes by dividing it to the max RGB value.
-	# 	self.x_train /= 255
-	# 	self.x_test /= 255
-	# 	# Creating a Sequential Model and adding the layers
-	# 	self.model = Sequential()
-	# 	self.model.add(Conv2D(28, kernel_size=(3, 3), input_shape=DigitDetect.input_shape))
-	# 	self.model.add(MaxPooling2D(pool_size=(2, 2)))
-	# 	self.model.add(Flatten())  # Flattening the 2D arrays for fully connected layers
-	# 	self.model.add(Dense(128, activation='relu'))
-	# 	self.model.add(Dropout(0.2))
-	# 	self.model.add(Dense(10, activation='softmax'))
+	#Create new model
+	def create_model(self):
+		(self.x_train, self.y_train), (self.x_test, self.y_test) = tf.keras.datasets.mnist.load_data()
+		# Reshaping the array to 4-dims so that it can work with the Keras API
+		self.x_train = self.x_train.reshape(self.x_train.shape[0], 28, 28, 1)
+		self.x_test = self.x_test.reshape(self.x_test.shape[0], 28, 28, 1)
+		# Making sure that the values are float so that we can get decimal points after division
+		self.x_train = self.x_train.astype('float32')
+		self.x_test = self.x_test.astype('float32')
+		# Normalizing the RGB codes by dividing it to the max RGB value.
+		self.x_train /= 255
+		self.x_test /= 255
+		# Creating a Sequential Model and adding the layers
+		self.model = Sequential()
+		self.model.add(Conv2D(28, kernel_size=(3, 3), input_shape=DigitDetect.input_shape))
+		self.model.add(MaxPooling2D(pool_size=(2, 2)))
+		self.model.add(Flatten())  # Flattening the 2D arrays for fully connected layers
+		self.model.add(Dense(128, activation='relu'))
+		self.model.add(Dropout(0.2))
+		self.model.add(Dense(10, activation='softmax'))
 
-	# Train model
-	# def train_model(self):
-	# 	self.model.compile(optimizer='adam',
-	# 					   loss='sparse_categorical_crossentropy',
-	# 					   metrics=['accuracy'])
-	# 	self.model.fit(x=self.x_train, y=self.y_train, epochs=10)
+	#Train model
+	def train_model(self):
+		self.model.compile(optimizer='adam',
+						   loss='sparse_categorical_crossentropy',
+						   metrics=['accuracy'])
+		self.model.fit(x=self.x_train, y=self.y_train, epochs=10)
 
-	# # Test model
-	# def test_model(self):
-	# 	loss, acc = self.model.evaluate(self.x_test, self.y_test)
-	# 	return loss, acc
+	# Test model
+	def test_model(self):
+		loss, acc = self.model.evaluate(self.x_test, self.y_test)
+		return loss, acc
 
-	# # Save trained model
-	# def save_model(self):
-	# 	self.model.save('data/final_model.h5')
+	# Save trained model
+	def save_model(self):
+		self.model.save('data/final_model.h5')
 
 	# Retrieve saved model
 	def retrieve_model(self):
@@ -68,4 +68,6 @@ class DigitDetect:
 		img = img.astype('float32')
 		img = img / 255.0
 		digit = self.model.predict_classes(img)
-		return digit[0]
+		
+		if np.amax(self.model.predict_proba(img)) > 0.8:
+			return digit[0]

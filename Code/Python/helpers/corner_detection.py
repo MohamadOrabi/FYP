@@ -23,14 +23,10 @@ def maskImage(gray):
 
   return gray
 
-def getCorners(frame,last_aspectRatio):
-  n_detected = 0
+def getCorners(frame):
   corners = np.empty([0, 2], dtype=np.float32)
   moments = np.empty([0, 2], dtype=np.float32)
   current_corners = np.empty([0, 2], dtype=np.float32)
-
-  detected_corners = False
-  status = "No Targets"
 
   # convert the frame to grayscale, blur it, and detect edges
   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -48,6 +44,8 @@ def getCorners(frame,last_aspectRatio):
   cnts = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
   cnts = imutils.grab_contours(cnts)
 
+
+  approx = None
   # loop over the contours
   for c in cnts:
     # approximate the contour
@@ -83,8 +81,6 @@ def getCorners(frame,last_aspectRatio):
 
       # ensure that the contour passes all our tests
       if detected and not cornerIn([x, y], current_corners):
-        detected_corners = True
-        n_detected += 1
         current_corners = np.append(current_corners, np.array([[x, y]]), axis=0)
         approx = np.squeeze(approx, axis = 1)
         #print("approx: ", np.shape(approx), " corners: ", np.shape(corners))
@@ -92,17 +88,13 @@ def getCorners(frame,last_aspectRatio):
 
         # draw an outline around the target and update the status text
         cv2.drawContours(frame, [approx], -1, (0, 0, 255), 3)
-        last_aspectRatio = aspectRatio
-        status = "Target(s) Acquired"
         # compute the center of the contour region and draw the crosshairs
         M = cv2.moments(approx)
         (cX, cY) = (int(M["m10"] / (M["m00"] + 1e-7)), int(M["m01"] / (M["m00"] + 1e-7)))
         moments = np.vstack([moments, [cX, cY]])
         cv2.circle(frame, (cX, cY), 5, (0, 0, 255), thickness=-1, lineType=8, shift=0)
 
-  # draw the status text on the frame
-  cv2.putText(frame,status + " - Aspect Ratio: " + str('%0.3f' % last_aspectRatio) + " - n_detected: " + str(n_detected), (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-  return frame, detected_corners, corners, moments, last_aspectRatio
+  return corners, moments
 
 def estimateCameraPose(objp, corners, mtx, dist):
 
@@ -115,12 +107,10 @@ def estimateCameraPose(objp, corners, mtx, dist):
     if ret:
       Rt,jacob = cv2.Rodrigues(rvec)
       R = Rt.transpose()
-      #print("R",Rt)
       pos = tvec.dot(-Rt)
       print("Distance: ",np.linalg.norm(pos))
       print("pos",pos)
   except:
-    warnings.warn("Error is estimateCameraPose")
     print("\n objp:", objp,
         "\n corners:", corners,
         "\n mtx:", mtx,
@@ -175,9 +165,8 @@ def sortCorners(corners):
     corners = np.insert(corners, 2, np.array([corners[-2], corners[-1]]), axis=0)
     corners = np.delete(corners, [8, 9], axis=0)
 
-    return corners
-  else:
-    return corners
+  return corners
+
 
 def checkCentroids(corners, moments, thresh, vthresh, cthresh, frame):
 
@@ -202,7 +191,7 @@ def checkCentroids(corners, moments, thresh, vthresh, cthresh, frame):
 
     if corners_out.shape[0] == 0:
       print('Centroid Check Failed, corners_out is empty')
-      return corners
+      return corners_out
     else:
       corners_out2 = np.empty([0, 2], dtype=np.float32)
 
@@ -274,7 +263,7 @@ def labelCorners(corners,frame):
     cv2.circle(frame, (int(x), int(y)), 5, (0, 255, 255), thickness=-1, lineType=8, shift=0)
     cv2.putText(frame, str(counter), (int(x + 12), int(y + 12)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
           (0, 255, 255), 2)
-  print('Number of corners: ', counter)
+    
 
 def houghLinesDetect(frame):
   # convert the frame to grayscale, blur it, and detect edges

@@ -10,33 +10,34 @@ def draw(img, corners, imgpts):
     img = cv.line(img, corner, tuple(imgpts[2].ravel()), (0,0,255), 5)
     return img
 
-calibrate = True;
+calibrate = False;
 
 # termination criteria
 criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 100, 0.001)
 # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
 objp = np.zeros((5*8,3), np.float32)
-objp[:,:2] = np.mgrid[0:8,0:5].T.reshape(-1,2)*25
+objp[:,:2] = np.mgrid[0:8,0:5].T.reshape(-1,2)*20
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
-images = glob.glob('Images/Original/Image-0*.jpeg') #Try to use only the first 12 images
+images = glob.glob('../Images/server/*.jpeg') #Try to use only the first 12 images
 
 
 
 parametersLoaded = False
 try:
-	mtx = np.load("mtx.npy")
-	dist = np.load("dist.npy")
+	mtx = np.load("../data/mtx.npy")
+	dist = np.load("../data/dist.npy")
 	parametersLoaded = True
 except:
 	print("Parameters not loaded")
 
 if calibrate or not parametersLoaded:
 	print("Calibrating")
+	gray = cv.imread("../Images/server/*.jpeg")
 	for fname in images:
 	    img = cv.imread(fname)
-	    img = cv.resize(img,(1200,1200))
+	    #img = cv.resize(img,(1200,1200))
 	    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 	    #cv.imshow('img',gray)
 	    # Find the chess board corners
@@ -50,28 +51,33 @@ if calibrate or not parametersLoaded:
 	        imgpoints.append(corners2)
 	        # Draw and display the corners
 	        cv.drawChessboardCorners(img, (8,5), corners2, ret)
-	        #cv.imshow('img', img)
-	        #cv.waitKey()
+	        cv.imshow('img', img)
+	        cv.waitKey(500)
 	cv.destroyAllWindows()
 
-	print("GRAY: ",gray.shape[::-1])
+	#print("GRAY: ",gray.shape[::-1])
 	ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],mtx,dist,flags = cv.CALIB_USE_INTRINSIC_GUESS)
-	np.save("mtx",mtx)
-	np.save("dist",dist)
+	np.save("../data/mtx",mtx)
+	np.save("../data/dist",dist)
 
 
 boardShape = (8,5)
 
+#url = "http://admin:admin@192.168.43.1:8080/video"
+#camera = cv.VideoCapture(url)
+
+#_, img = camera.read();
+
 #Read the Image
-img = cv.imread('Images/Image-30cm.jpeg') 
+img = cv.imread('../Images/server/img3`.jpeg') 
 h, w = img.shape[:2]
 newcameramtx, roi = cv.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 #cv.imshow('Original', img)
 #cv.waitKey()
 mtx = newcameramtx
-img = cv.undistort(img, mtx, dist, None, mtx)
-cv.imshow("Undistorted", img)
-cv.waitKey()
+# img = cv.undistort(img, mtx, dist, None, mtx)
+# cv.imshow("Undistorted", img)
+# cv.waitKey()
 
 print("Image shape: ",np.shape(img))
 
