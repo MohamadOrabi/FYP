@@ -14,8 +14,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     while True:
         #The string to be sent should be in the format: label + white space + x + white space + y
         #For example when retreiving shampoo: 2 0 1.3
-        str1 = input("Enter label and coordinates: ")
-        s.sendall(str1.encode())
+        try:
+            str1 = input("Enter label and coordinates: ")
+            s.sendall(str1.encode())
+        except:
+            break
 '''
 
 from PIL import Image
@@ -25,9 +28,9 @@ import socket
 import json
 
 # Convert real coordinates to map coordinates
-def convertRealToMap(coordinate):
-    mapScale = 0.3  # meters/pixel
-    return math.floor(coordinate/mapScale)
+def convertRealToMap(scale, coordinate):
+    # scale in meters/pixel
+    return math.floor(coordinate/scale)
 
 def rotate_around_point(coordinates, degrees, offset):
     x, y = coordinates
@@ -38,7 +41,7 @@ def rotate_around_point(coordinates, degrees, offset):
     qy = offset_y + -sin_rad * x + cos_rad * y
     return qx, qy
 
-def navigate(map_file, items_file, labels_file):
+def navigate(map_file, scale, entry_point, items_file, labels_file):
     # Each item "x" will have a file x_output.png which contains an image of the path
     output_file = "output.png"
     # Black
@@ -112,8 +115,8 @@ def navigate(map_file, items_file, labels_file):
     # }
 
     # Initial point that is replaced at the end with whatever destination we reach
-    initialX = 0.2
-    initialY = 2.3
+    initialX = entry_point[0]
+    initialY = entry_point[1]
 
     # Establishing socket and listening
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -131,8 +134,8 @@ def navigate(map_file, items_file, labels_file):
                     for x in range(image.width):
                         for y in range(image.height):
                             pixels[x][y] = defaultPixels[x][y]
-                    pixels[convertRealToMap(initialX)][convertRealToMap(initialY)] = COLOR_START
-                    pixels[convertRealToMap(v[0])][convertRealToMap(v[1])] = COLOR_END
+                    pixels[convertRealToMap(scale, initialX)][convertRealToMap(scale, initialY)] = COLOR_START
+                    pixels[convertRealToMap(scale, v[0])][convertRealToMap(scale, v[1])] = COLOR_END
 
                     for x in range(image.width):
                         for y in range(image.height):
@@ -157,8 +160,8 @@ def navigate(map_file, items_file, labels_file):
                 print("Item that we are going to retrieve: " + item)
                 graph = graphs[item]
 
-                initial_node = graph.graph[convertRealToMap(initialY)][convertRealToMap(initialX)]
-                destination_node = graph.graph[convertRealToMap(destinations[item][1])][convertRealToMap(destinations[item][0])]
+                initial_node = graph.graph[convertRealToMap(scale, initialY)][convertRealToMap(scale, initialX)]
+                destination_node = graph.graph[convertRealToMap(scale, destinations[item][1])][convertRealToMap(scale, destinations[item][0])]
 
                 nodes = graph.get_nodes()
 
@@ -190,7 +193,7 @@ def navigate(map_file, items_file, labels_file):
 
                 currentRealX = currentRealY = -1
                 # Giving directions until destination is reached
-                while convertRealToMap(currentRealX) != convertRealToMap(destinations[item][0]) or convertRealToMap(currentRealY) != convertRealToMap(destinations[item][1]):
+                while convertRealToMap(scale, currentRealX) != convertRealToMap(scale, destinations[item][0]) or convertRealToMap(scale, currentRealY) != convertRealToMap(scale, destinations[item][1]):
                     # Receiving coordinates from received from another process through socket
                     data = conn.recv(1024)
                     if not data:
@@ -202,8 +205,8 @@ def navigate(map_file, items_file, labels_file):
                         currentRealX, currentRealY = rotate_around_point((float(cameraRealX), float(cameraRealY)), labels[labelNo][1], labels[labelNo][0])
                     except KeyError:
                         continue
-                    currentMapX = convertRealToMap(currentRealX)
-                    currentMapY = convertRealToMap(currentRealY)
+                    currentMapX = convertRealToMap(scale, currentRealX)
+                    currentMapY = convertRealToMap(scale, currentRealY)
 
                     for node in nodes:
                         if node:
@@ -234,4 +237,4 @@ def navigate(map_file, items_file, labels_file):
                 del distances[item]
                 del graphs[item]
 
-navigate("../Images/Navigation/map.png", "../Images/Navigation/items.json", "../Images/Navigation/labels.json")
+navigate("../Images/Navigation/map.png", 0.3, (0.2, 2.3), "../Images/Navigation/items.json", "../Images/Navigation/labels.json")
