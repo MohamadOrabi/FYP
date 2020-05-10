@@ -82,7 +82,6 @@ def navigate(map_file, scale, entry_point, items_file, labels_file):
         distances[k] = float("inf")
         graphs[k] = None
 
-    # TODO: The labels over here only help in reaching shampoo. We need to add more labels for the other items
     f = open(labels_file)
     data = json.load(f)
     labels = dict()
@@ -214,6 +213,8 @@ def navigate(map_file, scale, entry_point, items_file, labels_file):
 
                     current_node = destination_node
                     smallest_tentative_distance = distances[item]
+                    # Flag if directions are sent
+                    directions_sent = False
                     # Go from destination node to initial node to find path
                     while current_node is not initial_node:
                         neighbors = graph.get_neighbors(current_node)
@@ -226,9 +227,16 @@ def navigate(map_file, scale, entry_point, items_file, labels_file):
                                 # Printing the instructions on how to move to reach destination
                                 if neighbor.x == currentMapX and neighbor.y == currentMapY:
                                     # Printing directions
-                                    print("Heading towards " + item + ": Move by " + str(current_node.x - neighbor.x) + " x blocks & " + str(current_node.y - neighbor.y) + " y blocks")
+                                    # print("Heading towards " + item + ": Move by " + str(current_node.x - neighbor.x) + " x blocks & " + str(current_node.y - neighbor.y) + " y blocks")
+                                    string_to_send = "Heading towards " + item + ": Move by " + str(
+                                        current_node.x - neighbor.x) + " x blocks & " + str(
+                                        current_node.y - neighbor.y) + " y blocks"
+                                    conn.sendall(string_to_send.encode())
+                                    directions_sent = True
                                 current_node = neighbor
-
+                    if not directions_sent:
+                        # Do nothing is sent when either an item has just been retrieved or location received is invalid
+                        conn.sendall(b"Do nothing")
                 # Change initial point at the end to the destination point
                 initialX = currentRealX
                 initialY = currentRealY
